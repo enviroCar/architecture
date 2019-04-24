@@ -1,5 +1,59 @@
 version: '3'
 services: 
+
+  ### Reverse Proxy 
+  caddy:
+    build: 
+      context: https://github.com/abiosoft/caddy-docker.git
+      args: 
+         plugins: filemanager,cors,ipfilter,realip,expires,cache
+    image: ${REGISTRY}/ec-base/custom-caddy
+    ports:
+    - 80:80
+    - 443:443
+    - 4443:4443
+    volumes:
+    - "./caddy/Caddyfile:/etc/Caddyfile"
+    - "./.caddy:/root/.caddy"
+    #- "./config/cert.pem:/etc/cert.pem"
+    #- "./config/key.pem:/etc/key.pem"
+    environment:
+    - ACME_AGREE=true
+    networks: 
+    - ecbase
+  
+  ### Kafka Stack
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      zk_id: "1"
+    ports:
+    - "2181:2181"
+    networks:
+    - ecbase
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+    - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_MESSAGE_MAX_BYTES: 5048576
+      KAFKA_MAX_REQUEST_SIZE: 5048576
+      KAFKA_MAX_PARTITION_FETCH_BYTES: 5048576
+    ports:
+    - "9092:9092"
+    volumes:
+    - ./kafka/data:/var/lib/kafka/data
+    networks:
+    - ecbase
   
   ### ELK Stack
   elasticsearch:
@@ -8,9 +62,10 @@ services:
     - 9200:9200
     - 9300:9300
     networks:
-    - shared
+    - ecbase
     volumes:
     - ./data/elasticsearch:/usr/share/elasticsearch/data
+
   kibana:
     build: 
       context: ./kibana/
@@ -22,9 +77,10 @@ services:
     depends_on:
     - elasticsearch
     networks:
-    - shared
+    - ecbase
     labels:
     - com.centurylinklabs.watchtower.enable=true
+    
   filebeat:
     build:
       context: ./filebeat/
@@ -36,10 +92,10 @@ services:
     depends_on:
     - elasticsearch
     networks: 
-    - shared
+    - ecbase
     labels:
     - com.centurylinklabs.watchtower.enable=true
 
 networks:
-  shared:
+  ecbase:
     driver: bridge
