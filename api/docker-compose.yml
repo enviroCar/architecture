@@ -7,8 +7,6 @@ services:
     - 27017:27017
     networks:
     - data-api
-    labels:
-    - com.centurylinklabs.watchtower.enable=true
 
   mongo-user:
     image: mongo:4-xenial
@@ -16,12 +14,9 @@ services:
     - 28017:27017
     networks:
     - user-api
-    labels:
-    - com.centurylinklabs.watchtower.enable=true
 
   dsm:
-    image: docker.52north.org/envirocar/server:latest
-    build: https://github.com/enviroCar/enviroCar-server.git#dsm
+    image: ${REGISTRY}/envirocar/dsm:latest
     volumes:
     - ./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
     - ./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
@@ -40,7 +35,7 @@ services:
     - com.centurylinklabs.watchtower.enable=true
 
   usm:
-    image: docker.52north.org/envirocar/server:latest
+    image: ${REGISTRY}/envirocar/usm:latest
     build: https://github.com/enviroCar/enviroCar-server.git#usm
     volumes:
     - ./usm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
