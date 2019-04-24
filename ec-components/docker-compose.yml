@@ -1,0 +1,85 @@
+version: '3'
+services: 
+
+  ### GeoServer Setup
+  geoserver:
+    image: kartoza/geoserver
+    hostname: geoserver
+    ports: 
+    - 8089:8080
+    depends_on:
+    - mapserver-db
+    networks:
+    - ec-data-api
+
+  mapserver-db:
+    image: mdillon/postgis
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+    - POSTGRES_DB=mapserver
+    volumes:
+    - ./data/:/var/lib/postgresql/data
+    networks: 
+    - ec-data-api
+
+  ### Data Management Service
+  mongo-data:
+    image: mongo:4-xenial
+    ports:
+    - 27017:27017
+    networks:
+    - data-api
+
+  dsm:
+    image: ${REGISTRY}/envirocar/dsm:latest
+    volumes:
+    - ./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
+    - ./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
+    - ./dsm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+    - ./dsm/mail.properties:/var/lib/jetty/mail.properties:ro
+    - ./dsm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+    networks:
+    - data-api
+    environment:
+      JAVA_OPTIONS: -Djava.awt.headless=true
+    ports:
+    - 8080:8080
+    depends_on:
+    - mongo-data
+    labels:
+    - com.centurylinklabs.watchtower.enable=true
+
+  ### User Management Service
+  mongo-user:
+    image: mongo:4-xenial
+    ports:
+    - 28017:27017
+    networks:
+    - user-api
+
+  usm:
+    image: ${REGISTRY}/envirocar/usm:latest
+    build: https://github.com/enviroCar/enviroCar-server.git#usm
+    volumes:
+    - ./usm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
+    - ./usm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
+    - ./usm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+    - ./usm/mail.properties:/var/lib/jetty/mail.properties:ro
+    - ./usm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+    networks:
+    - user-api
+    environment:
+      JAVA_OPTIONS: -Djava.awt.headless=true
+    ports:
+    - 8081:8080
+    depends_on:
+    - mongo-user
+    labels:
+    - com.centurylinklabs.watchtower.enable=true
+
+networks:
+  ec-user-api:
+    driver: bridge
+  ec-data-api:
+    driver: bridge
