@@ -1,0 +1,58 @@
+version: "3"
+services:
+
+  mongo-data:
+    image: mongo:4-xenial
+    ports:
+    - 27017:27017
+    networks:
+    - data-api
+
+  mongo-user:
+    image: mongo:4-xenial
+    ports:
+    - 28017:27017
+    networks:
+    - user-api
+
+  dsm:
+    image: docker.52north.org/envirocar/server:latest
+    build: https://github.com/enviroCar/enviroCar-server.git#dsm
+    volumes:
+    - ./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
+    - ./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
+    - ./dsm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+    - ./dsm/mail.properties:/var/lib/jetty/mail.properties:ro
+    - ./dsm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+    networks:
+    - data-api
+    environment:
+      JAVA_OPTIONS: -Djava.awt.headless=true
+    ports:
+    - 8080:8080
+    depends_on:
+    - mongo-data
+
+  usm:
+    image: docker.52north.org/envirocar/server:latest
+    build: https://github.com/enviroCar/enviroCar-server.git#usm
+    volumes:
+    - ./usm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
+    - ./usm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
+    - ./usm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+    - ./usm/mail.properties:/var/lib/jetty/mail.properties:ro
+    - ./usm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+    networks:
+    - user-api
+    environment:
+      JAVA_OPTIONS: -Djava.awt.headless=true
+    ports:
+    - 8081:8080
+    depends_on:
+    - mongo-user
+
+networks:
+  user-api:
+    driver: bridge
+  data-api:
+    driver: bridge
