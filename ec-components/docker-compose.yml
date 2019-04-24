@@ -29,7 +29,7 @@ services:
     ports:
     - 27017:27017
     networks:
-    - data-api
+    - ec-data-api
 
   dsm:
     image: ${REGISTRY}/envirocar/dsm:latest
@@ -40,7 +40,7 @@ services:
     - ./dsm/mail.properties:/var/lib/jetty/mail.properties:ro
     - ./dsm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
     networks:
-    - data-api
+    - ec-data-api
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
     ports:
@@ -56,7 +56,7 @@ services:
     ports:
     - 28017:27017
     networks:
-    - user-api
+    - ec-user-api
 
   usm:
     image: ${REGISTRY}/envirocar/usm:latest
@@ -68,7 +68,7 @@ services:
     - ./usm/mail.properties:/var/lib/jetty/mail.properties:ro
     - ./usm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
     networks:
-    - user-api
+    - ec-user-api
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
     ports:
