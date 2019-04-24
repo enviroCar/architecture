@@ -1,11 +1,11 @@
 version: '3'
 services: 
   watchtower:
-    image: v2tec/watchtower
+    image: containrrr/watchtower
     restart: always
     volumes: 
       - /var/run/docker.sock:/var/run/docker.sock
-      - /home/ap2/.docker/config.json:/config.json
+    # - /home/.docker/config.json:/config.json
     command: --interval 30 --label-enable
     environment: 
       - WATCHTOWER_NOTIFICATIONS_T=slack
