@@ -7,6 +7,8 @@ services:
     - 27017:27017
     networks:
     - data-api
+    labels:
+    - com.centurylinklabs.watchtower.enable=true
 
   mongo-user:
     image: mongo:4-xenial
@@ -14,6 +16,8 @@ services:
     - 28017:27017
     networks:
     - user-api
+    labels:
+    - com.centurylinklabs.watchtower.enable=true
 
   dsm:
     image: docker.52north.org/envirocar/server:latest
@@ -32,6 +36,8 @@ services:
     - 8080:8080
     depends_on:
     - mongo-data
+    labels:
+    - com.centurylinklabs.watchtower.enable=true
 
   usm:
     image: docker.52north.org/envirocar/server:latest
@@ -50,6 +56,8 @@ services:
     - 8081:8080
     depends_on:
     - mongo-user
+    labels:
+    - com.centurylinklabs.watchtower.enable=true
 
 networks:
   user-api:
