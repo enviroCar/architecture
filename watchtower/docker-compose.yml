@@ -1,0 +1,18 @@
+version: '3'
+services: 
+  watchtower:
+    image: v2tec/watchtower
+    restart: always
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/ap2/.docker/config.json:/config.json
+    command: --interval 30 --label-enable
+    environment: 
+      - WATCHTOWER_NOTIFICATIONS_T=slack
+      - WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL_T=https://hooks.slack.com/##
+      - WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER_T=watchtower
+    networks:
+      - shared
+networks:
+  shared:
+    driver: bridge
