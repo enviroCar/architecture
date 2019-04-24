@@ -1,16 +1,37 @@
 version: '3'
 services: 
+  docker-engine:
+    image: docker:dind
+    privileged: true
+    depends_on:
+    - registry
+    command: dockerd -H tcp://0.0.0.0:2375 --insecure-registry registry:5000
+    networks:
+    - shared
+  
+  jenkins:
+    build: ./jenkins
+    restart: always
+    ports:
+    - 9000:8080
+    environment:
+      DOCKER_HOST: tcp://docker-engine:2375
+    depends_on:
+    - docker-engine
+    networks:
+    - shared
+
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower:latest
     restart: always
     volumes: 
-      - /var/run/docker.sock:/var/run/docker.sock
+    - /var/run/docker.sock:/var/run/docker.sock
     # - /home/.docker/config.json:/config.json
     command: --interval 30 --label-enable
     environment: 
-      - WATCHTOWER_NOTIFICATIONS_T=slack
-      - WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL_T=https://hooks.slack.com/##
-      - WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER_T=watchtower
+      WATCHTOWER_NOTIFICATIONS_T: slack
+      WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL_T: https://hooks.slack.com/##
+      WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER_T: watchtower
     networks:
       - shared
   registry:
