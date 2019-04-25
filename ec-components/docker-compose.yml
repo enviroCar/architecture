@@ -32,8 +32,6 @@ services:
 
   dsm:
     image: ${REGISTRY}/ec-components/dsm:latest
-    build: 
-      context: https://github.com/enviroCar/enviroCar-server.git#dsm
     volumes:
       - ./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
       - ./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
@@ -77,6 +75,19 @@ services:
       - 8081:8080
     depends_on:
       - mongo-user
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
+  auth-proxy:
+    image: ${REGISTRY}/ec-components/auth-proxy:latest
+    build:
+      context: https://github.com/enviroCar/auth-proxy.git
+    depends_on:
+      - usm
+      - dsm
+    networks:
+      - ec-user-api
+      - ec-data-api
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
