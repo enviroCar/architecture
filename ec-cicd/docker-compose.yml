@@ -22,6 +22,7 @@ services:
       DOCKER_HOST: tcp://docker-engine:2375
       JENKINS_USERNAME: ${JENKINS_PASSWORD}
       JENKINS_PASSWORD: ${JENKINS_PASSWORD}
+      JENKINS_OPTS: --prefix=/jenkins
     depends_on:
       - docker-engine
     networks:
