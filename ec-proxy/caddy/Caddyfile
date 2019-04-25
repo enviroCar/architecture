@@ -9,7 +9,15 @@ processing.envirocar.org:80, processing.envirocar.org:443, localhost:80, localho
         ip 80.156.182.234
     }
 
+    proxy /auth-proxy auth-proxy:9999 {
+        transparent
+    }
+
     proxy /jenkins jenkins:8080 {
+        transparent
+    }
+    
+    proxy /geoserver geoserver:8080 {
         transparent
     }
 
@@ -21,6 +29,10 @@ processing.envirocar.org:80, processing.envirocar.org:443, localhost:80, localho
     proxy /usm usm:8080 {
         transparent
         without /usm
+    }
+
+    proxy /app webapp:80 {
+        transparent
     }
 
     tls self_signed
