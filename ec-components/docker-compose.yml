@@ -95,7 +95,7 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
-  auth-proxy:
+  webapp:
     image: ${REGISTRY}/ec-components/webapp:latest
     build:
       context: https://github.com/enviroCar/envirocar-www-ng.git
