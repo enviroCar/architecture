@@ -95,6 +95,19 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
+  auth-proxy:
+    image: ${REGISTRY}/ec-components/webapp:latest
+    build:
+      context: https://github.com/enviroCar/envirocar-www-ng.git
+    depends_on:
+      - usm
+      - dsm
+    networks:
+      - ec-user-api
+      - ec-data-api
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
 networks:
   ec-user-api:
     driver: bridge
