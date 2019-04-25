@@ -1,27 +1,5 @@
 version: "3"
 services:
-  ### Reverse Proxy
-  caddy:
-    build:
-      context: https://github.com/abiosoft/caddy-docker.git
-      dockerfile: Dockerfile-no-stats
-      args:
-        plugins: cors,ipfilter,realip,expires,cache
-    image: ${REGISTRY}/ec-base/custom-caddy
-    ports:
-      - 80:80
-      - 443:443
-      - 4443:4443
-    volumes:
-      - "./caddy/Caddyfile:/etc/Caddyfile"
-      - "./.caddy:/root/.caddy"
-    #- "./config/cert.pem:/etc/cert.pem"
-    #- "./config/key.pem:/etc/key.pem"
-    environment:
-      - ACME_AGREE=true
-    networks:
-      - ec-base
-      - elk
 
   ### Kafka Stack
   zookeeper:
@@ -32,7 +10,7 @@ services:
     ports:
       - "2181:2181"
     networks:
-      - ec-base
+      - shared
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -54,7 +32,7 @@ services:
     volumes:
       - ./kafka/data:/var/lib/kafka/data
     networks:
-      - ec-base
+      - shared
 
   ### ELK Stack
   elasticsearch:
@@ -112,7 +90,13 @@ volumes:
     driver: local
 
 networks:
-  ec-base:
+  shared:
     driver: bridge
   elk:
     driver: bridge
+  eccicd_shared:
+    external: true
+  eccomponents_ecuserapi:
+    external: true
+  eccomponents_ecdataapi:
+    external: true

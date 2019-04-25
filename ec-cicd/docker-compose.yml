@@ -9,7 +9,7 @@ services:
       - registry
     command: --insecure-registry registry:5000
     networks:
-      - ec-cicd
+      - shared
 
   jenkins:
     build:
@@ -26,7 +26,7 @@ services:
     depends_on:
       - docker-engine
     networks:
-      - ec-cicd
+      - shared
 
   watchtower:
     build:
@@ -42,7 +42,7 @@ services:
       WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: ${WT_SLACK_WEBHOOK}
       WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: watchtower
     networks:
-      - ec-cicd
+      - shared
 
   registry:
     build:
@@ -52,8 +52,14 @@ services:
     ports:
       - 5000:5000
     networks:
-      - ec-cicd
+      - shared
+    volumes: 
+      - registrydata:/var/lib/registry
+
+volumes:
+  registrydata:
+    driver: local
 
 networks:
-  ec-cicd:
+  shared:
     driver: bridge

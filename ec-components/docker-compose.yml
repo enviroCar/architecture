@@ -45,7 +45,7 @@ services:
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
     ports:
-      - 8080:8080
+      - 8082:8080
     depends_on:
       - mongo-data
     labels:
