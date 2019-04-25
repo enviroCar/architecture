@@ -64,7 +64,13 @@ services:
     networks:
     - ec-base
     volumes:
-    - ./data/elasticsearch:/usr/share/elasticsearch/data
+    - esdata:/usr/share/elasticsearch/data
+    environment:
+    - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
 
   kibana:
     build: 
@@ -72,8 +78,8 @@ services:
     image: ${REGISTRY}/ec-base/kibana
     ports:
     - 5601:5601
-    environment:
-    - ELASTICSEARCH_URL=http://elasticsearch:9200
+    environment:url
+    - ELASTICSEARCH_URL=elasticsearch:9200
     depends_on:
     - elasticsearch
     networks:
@@ -95,6 +101,10 @@ services:
     - ec-base
     labels:
     - com.centurylinklabs.watchtower.enable=true
+
+volumes:
+  esdata:
+    driver: local
 
 networks:
   ec-base:
