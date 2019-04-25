@@ -20,6 +20,7 @@ services:
       - ACME_AGREE=true
     networks:
       - ecbase
+      - elk
 
   ### Kafka Stack
   zookeeper:
@@ -56,19 +57,25 @@ services:
 
   ### ELK Stack
   elasticsearch:
-    image: elasticsearch
+    image: ${REGISTRY}/ec-base/elasticsearch:latest
+    build:
+      context: ./elasticsearch
+      args:
+        ELK_VERSION: ${ELK_VERSION}
     ports:
       - 9200:9200
       - 9300:9300
     networks:
-      - ecbase
+      - elk
     volumes:
       - ./data/elasticsearch:/usr/share/elasticsearch/data
 
   kibana:
+    image: ${REGISTRY}/ec-base/kibana:latest
     build:
       context: ./kibana/
-    image: ${REGISTRY}/ec-base/kibana
+      args:
+        ELK_VERSION: ${ELK_VERSION}
     ports:
       - 5601:5601
     environment:
@@ -76,14 +83,16 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - ecbase
+      - elk
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
   filebeat:
+    image: ${REGISTRY}/ec-base/filebeat:latest
     build:
-      context: ./filebeat/
-    image: ${REGISTRY}/ec-base/filebeat
+      context: ./filebeat
+      args:
+        ELK_VERSION: ${ELK_VERSION}
     user: root
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
@@ -91,10 +100,12 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - ecbase
+      - elk
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
 networks:
   ecbase:
+    driver: bridge
+  elk:
     driver: bridge
