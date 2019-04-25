@@ -20,7 +20,7 @@ services:
     environment:
       - ACME_AGREE=true
     networks:
-      - ecbase
+      - ec-base
       - elk
 
   ### Kafka Stack
@@ -32,7 +32,7 @@ services:
     ports:
       - "2181:2181"
     networks:
-      - ecbase
+      - ec-base
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -54,7 +54,7 @@ services:
     volumes:
       - ./kafka/data:/var/lib/kafka/data
     networks:
-      - ecbase
+      - ec-base
 
   ### ELK Stack
   elasticsearch:
@@ -106,7 +106,7 @@ services:
       - com.centurylinklabs.watchtower.enable=true
 
 networks:
-  ecbase:
+  ec-base:
     driver: bridge
   elk:
     driver: bridge
