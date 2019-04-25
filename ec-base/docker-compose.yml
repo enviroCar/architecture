@@ -85,14 +85,14 @@ services:
         ELK_VERSION: ${ELK_VERSION}
     ports:
     - 5601:5601
-    environment:url
+    environment:
     - ELASTICSEARCH_URL=elasticsearch:9200
     depends_on:
-      - elasticsearch
+    - elasticsearch
     networks:
-      - elk
+    - elk
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+    - com.centurylinklabs.watchtower.enable=true
 
   filebeat:
     image: ${REGISTRY}/ec-base/filebeat:latest

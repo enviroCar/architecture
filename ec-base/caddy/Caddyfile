@@ -1,3 +1,7 @@
 localhost:80, localhost:443 {
+
+    proxy /kibana kibana:5601 {
+        without /kibana
+    }
     
 }
