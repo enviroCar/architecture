@@ -1,27 +1,28 @@
-version: '3'
-services: 
-
-  ### Reverse Proxy 
+version: "3"
+services:
+  ### Reverse Proxy
   caddy:
-    build: 
-      context: github.com/abiosoft/caddy-docker.git
-      args: 
-         plugins: "cors,ipfilter,realip,expires,cache"
+    build:
+      context: https://github.com/abiosoft/caddy-docker.git
+      dockerfile: Dockerfile-no-stats
+      args:
+        plugins: cors,ipfilter,realip,expires,cache
     image: ${REGISTRY}/ec-base/custom-caddy
     ports:
-    - 80:80
-    - 443:443
-    - 4443:4443
+      - 80:80
+      - 443:443
+      - 4443:4443
     volumes:
-    - "./caddy/Caddyfile:/etc/Caddyfile"
-    - "./.caddy:/root/.caddy"
+      - "./caddy/Caddyfile:/etc/Caddyfile"
+      - "./.caddy:/root/.caddy"
     #- "./config/cert.pem:/etc/cert.pem"
     #- "./config/key.pem:/etc/key.pem"
     environment:
-    - ACME_AGREE=true
-    networks: 
-    - ec-base
-  
+      - ACME_AGREE=true
+    networks:
+      - ec-base
+      - elk
+
   ### Kafka Stack
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -29,14 +30,14 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       zk_id: "1"
     ports:
-    - "2181:2181"
+      - "2181:2181"
     networks:
-    - ec-base
+      - ec-base
 
   kafka:
     image: confluentinc/cp-kafka:latest
     depends_on:
-    - zookeeper
+      - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
@@ -49,20 +50,24 @@ services:
       KAFKA_MAX_REQUEST_SIZE: 5048576
       KAFKA_MAX_PARTITION_FETCH_BYTES: 5048576
     ports:
-    - "9092:9092"
+      - "9092:9092"
     volumes:
-    - ./kafka/data:/var/lib/kafka/data
+      - ./kafka/data:/var/lib/kafka/data
     networks:
-    - ec-base
-  
+      - ec-base
+
   ### ELK Stack
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
-    ports: 
-    - 9200:9200
-    - 9300:9300
+    image: ${REGISTRY}/ec-base/elasticsearch:latest
+    build:
+      context: ./elasticsearch
+      args:
+        ELK_VERSION: ${ELK_VERSION}
+    ports:
+      - 9200:9200
+      - 9300:9300
     networks:
-    - ec-base
+      - elk
     volumes:
     - esdata:/usr/share/elasticsearch/data
     environment:
@@ -73,34 +78,38 @@ services:
         hard: -1
 
   kibana:
-    build: 
+    image: ${REGISTRY}/ec-base/kibana:latest
+    build:
       context: ./kibana/
-    image: ${REGISTRY}/ec-base/kibana
+      args:
+        ELK_VERSION: ${ELK_VERSION}
     ports:
     - 5601:5601
     environment:url
     - ELASTICSEARCH_URL=elasticsearch:9200
     depends_on:
-    - elasticsearch
+      - elasticsearch
     networks:
-    - ec-base
+      - elk
     labels:
-    - com.centurylinklabs.watchtower.enable=true
+      - com.centurylinklabs.watchtower.enable=true
 
   filebeat:
+    image: ${REGISTRY}/ec-base/filebeat:latest
     build:
-      context: ./filebeat/
-    image: ${REGISTRY}/ec-base/filebeat
+      context: ./filebeat
+      args:
+        ELK_VERSION: ${ELK_VERSION}
     user: root
     volumes:
-    - /var/lib/docker/containers:/var/lib/docker/containers:ro
-    - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-    - elasticsearch
-    networks: 
-    - ec-base
+      - elasticsearch
+    networks:
+      - elk
     labels:
-    - com.centurylinklabs.watchtower.enable=true
+      - com.centurylinklabs.watchtower.enable=true
 
 volumes:
   esdata:
@@ -108,4 +117,6 @@ volumes:
 
 networks:
   ec-base:
+    driver: bridge
+  elk:
     driver: bridge

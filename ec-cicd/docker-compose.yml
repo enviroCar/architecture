@@ -1,50 +1,58 @@
-version: '3'
-services: 
+version: "3"
+services:
   docker-engine:
-    image: docker:dind
+    build:
+      context: ./docker-engine
+    image: ${REGISTRY}/ec-cicd/docker-engine:latest
     privileged: true
     depends_on:
-    - registry
-    command: dockerd -H tcp://0.0.0.0:2375 --insecure-registry registry:5000
+      - registry
+    command: --insecure-registry registry:5000
     networks:
-    - ec-cicd
-  
+      - ec-cicd
+
   jenkins:
-    build: ./jenkins
+    build:
+      context: ./jenkins
+    image: ${REGISTRY}/ec-cicd/jenkins:latest
     restart: always
     ports:
-    - 9000:8080
+      - 9000:8080
     environment:
       DOCKER_HOST: tcp://docker-engine:2375
-      JENKINS_USERNAME: jenkins
-      JENKINS_PASSWORD: jenkins
+      JENKINS_USERNAME: ${JENKINS_PASSWORD}
+      JENKINS_PASSWORD: ${JENKINS_PASSWORD}
     depends_on:
-    - docker-engine
+      - docker-engine
     networks:
-    - ec-cicd
+      - ec-cicd
 
   watchtower:
-    image: containrrr/watchtower:latest
+    build:
+      context: ./watchtower
+    image: ${REGISTRY}/ec-cicd/watchtower:latest
     restart: always
-    volumes: 
-    - /var/run/docker.sock:/var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     # - /home/.docker/config.json:/config.json
     command: --interval 30 --label-enable
-    environment: 
+    environment:
       WATCHTOWER_NOTIFICATIONS_T: slack
       WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL_T: https://hooks.slack.com/##
       WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER_T: watchtower
     networks:
-    - ec-cicd
+      - ec-cicd
 
   registry:
-    image: registry:2
+    build:
+      context: ./registry
+    image: ${REGISTRY}/ec-cicd/registry:latest
     restart: always
     ports:
-    - 5000:5000
+      - 5000:5000
     networks:
-    - ec-cicd
-    
+      - ec-cicd
+
 networks:
   ec-cicd:
     driver: bridge

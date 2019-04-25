@@ -1,82 +1,84 @@
-version: '3'
-services: 
-
+version: "3"
+services:
   ### GeoServer Setup
   geoserver:
-    image: kartoza/geoserver
+    image: kartoza/geoserver:${GEOSERVER_VERSION}
     hostname: geoserver
-    ports: 
-    - 8089:8080
+    ports:
+      - 8089:8080
     depends_on:
-    - mapserver-db
+      - mapserver-db
     networks:
-    - ec-data-api
+      - ec-data-api
 
   mapserver-db:
-    image: mdillon/postgis
+    image: mdillon/postgis:${POSTGRES_VERSION}
     environment:
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=postgres
-    - POSTGRES_DB=mapserver
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=mapserver
     volumes:
-    - ./data/:/var/lib/postgresql/data
-    networks: 
-    - ec-data-api
+      - ./data/:/var/lib/postgresql/data
+    networks:
+      - ec-data-api
 
   ### Data Management Service
   mongo-data:
-    image: mongo:4-xenial
+    image: mongo:${MONGODB_VERSION}
     ports:
-    - 27017:27017
+      - 27017:27017
     networks:
-    - ec-data-api
+      - ec-data-api
 
   dsm:
-    image: ${REGISTRY}/envirocar/dsm:latest
+    image: ${REGISTRY}/ec-components/dsm:latest
+    build: 
+      context: https://github.com/enviroCar/enviroCar-server.git#dsm
     volumes:
-    - ./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
-    - ./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
-    - ./dsm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
-    - ./dsm/mail.properties:/var/lib/jetty/mail.properties:ro
-    - ./dsm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+      - ./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
+      - ./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
+      - ./dsm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+      - ./dsm/mail.properties:/var/lib/jetty/mail.properties:ro
+      - ./dsm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
     networks:
-    - ec-data-api
+      - ec-data-api
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
     ports:
-    - 8080:8080
+      - 8080:8080
     depends_on:
-    - mongo-data
+      - mongo-data
     labels:
-    - com.centurylinklabs.watchtower.enable=true
+      - com.centurylinklabs.watchtower.enable=true
 
   ### User Management Service
   mongo-user:
-    image: mongo:4-xenial
+    image: mongo:${MONGODB_VERSION}
     ports:
-    - 28017:27017
+      - 28017:27017
     networks:
-    - ec-user-api
+      - ec-user-api
 
   usm:
-    image: ${REGISTRY}/envirocar/usm:latest
-    build: https://github.com/enviroCar/enviroCar-server.git#usm
+    image: ${REGISTRY}/ec-components/usm:latest
+    build: 
+      context: https://github.com/enviroCar/enviroCar-server.git#usm
     volumes:
-    - ./usm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
-    - ./usm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
-    - ./usm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
-    - ./usm/mail.properties:/var/lib/jetty/mail.properties:ro
-    - ./usm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+      - ./usm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
+      - ./usm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
+      - ./usm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+      - ./usm/mail.properties:/var/lib/jetty/mail.properties:ro
+      - ./usm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
     networks:
-    - ec-user-api
+      - ec-user-api
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
     ports:
-    - 8081:8080
+      - 8081:8080
     depends_on:
-    - mongo-user
+      - mongo-user
     labels:
-    - com.centurylinklabs.watchtower.enable=true
+      - com.centurylinklabs.watchtower.enable=true
 
 networks:
   ec-user-api:
