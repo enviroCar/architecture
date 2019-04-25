@@ -16,6 +16,8 @@ services:
       context: ./jenkins
     image: ${REGISTRY}/ec-cicd/jenkins:latest
     restart: always
+    volumes:
+      - ./jenkins/jobs:/usr/share/jenkins/jobs
     ports:
       - 9000:8080
     environment:
