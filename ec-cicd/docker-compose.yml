@@ -38,9 +38,9 @@ services:
     # - /home/.docker/config.json:/config.json
     command: --interval 30 --label-enable
     environment:
-      WATCHTOWER_NOTIFICATIONS_T: slack
-      WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL_T: https://hooks.slack.com/##
-      WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER_T: watchtower
+      WATCHTOWER_NOTIFICATIONS: slack
+      WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: ${WT_SLACK_WEBHOOK}
+      WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: watchtower
     networks:
       - ec-cicd
 
