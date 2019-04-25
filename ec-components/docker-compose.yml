@@ -88,6 +88,10 @@ services:
     networks:
       - ec-user-api
       - ec-data-api
+    environment:
+      AUTH_PROXY_CONTEXT_PATH: /auth-proxy
+      AUTH_PROXY_LOG_LEVEL: INFO
+      AUTH_PROXY_TARGET_URI: http://processing.envirocar.org/usm/
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
