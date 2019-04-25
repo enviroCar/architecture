@@ -1,4 +1,4 @@
-filebeat.prospectors:
+filebeat.inputs:
 - type: docker
   paths:
    - '/var/lib/docker/containers/*/*.log'

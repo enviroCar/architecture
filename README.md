@@ -25,3 +25,12 @@ Docker Architecture for envirocar.org
   * Docker Registry
   * Jenkins
 
+# Troubleshooting
+## Setting up ElasticSearch on Docker
+
+```ERROR: [2] bootstrap checks failed
+[1]: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+```
+
+Solution: sudo sysctl -w vm.max_map_count=262144
+

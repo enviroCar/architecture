@@ -69,7 +69,13 @@ services:
     networks:
       - elk
     volumes:
-      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    - esdata:/usr/share/elasticsearch/data
+    environment:
+    - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
 
   kibana:
     image: ${REGISTRY}/ec-base/kibana:latest
@@ -78,15 +84,15 @@ services:
       args:
         ELK_VERSION: ${ELK_VERSION}
     ports:
-      - 5601:5601
+    - 5601:5601
     environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    - ELASTICSEARCH_URL=elasticsearch:9200
     depends_on:
-      - elasticsearch
+    - elasticsearch
     networks:
-      - elk
+    - elk
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+    - com.centurylinklabs.watchtower.enable=true
 
   filebeat:
     image: ${REGISTRY}/ec-base/filebeat:latest
@@ -104,6 +110,10 @@ services:
       - elk
     labels:
       - com.centurylinklabs.watchtower.enable=true
+
+volumes:
+  esdata:
+    driver: local
 
 networks:
   ec-base:
