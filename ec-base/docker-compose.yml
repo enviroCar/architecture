@@ -4,8 +4,9 @@ services:
   caddy:
     build:
       context: https://github.com/abiosoft/caddy-docker.git
+      dockerfile: Dockerfile-no-stats
       args:
-        plugins: filemanager,cors,ipfilter,realip,expires,cache
+        plugins: cors,ipfilter,realip,expires,cache
     image: ${REGISTRY}/ec-base/custom-caddy
     ports:
       - 80:80
