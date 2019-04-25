@@ -1,4 +1,4 @@
-localhost:80, localhost:443 {
+processing.envirocar.org:80, processing.envirocar.org:443, localhost:80, localhost:443 {
 
     proxy /kibana kibana:5601 {
         without /kibana
@@ -8,4 +8,8 @@ localhost:80, localhost:443 {
         rule allow
         ip 80.156.182.234
     }
+
+    tls self_signed
+
 }
+
