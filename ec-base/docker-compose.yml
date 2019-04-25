@@ -91,8 +91,6 @@ services:
     - elasticsearch
     networks:
     - elk
-    labels:
-    - com.centurylinklabs.watchtower.enable=true
 
   filebeat:
     image: ${REGISTRY}/ec-base/filebeat:latest
@@ -108,8 +106,6 @@ services:
       - elasticsearch
     networks:
       - elk
-    labels:
-      - com.centurylinklabs.watchtower.enable=true
 
 volumes:
   esdata:
