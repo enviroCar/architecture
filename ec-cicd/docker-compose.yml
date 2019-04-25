@@ -53,6 +53,12 @@ services:
       - 5000:5000
     networks:
       - shared
+    volumes: 
+      - registrydata:/var/lib/registry
+
+volumes:
+  registrydata:
+    driver: local
 
 networks:
   shared:

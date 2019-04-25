@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile-no-stats
       args:
         plugins: cors,ipfilter,realip,expires,cache
-    image: ${REGISTRY}/ec-base/caddy
+    image: ${REGISTRY}/ec-proxy/caddy
     ports:
       - 80:80
       - 443:443
@@ -24,8 +24,8 @@ services:
       - ecbase_shared
       - ecbase_elk
       - eccicd_shared
-      - eccomponents_ecuserapi
-      - eccomponents_ecdataapi
+      - eccomponents_ec-user-api
+      - eccomponents_ec-data-api
 
 networks:
   shared:
@@ -36,7 +36,7 @@ networks:
     external: true
   eccicd_shared:
     external: true
-  eccomponents_ecuserapi:
+  eccomponents_ec-user-api:
     external: true
-  eccomponents_ecdataapi:
+  eccomponents_ec-data-api:
     external: true
