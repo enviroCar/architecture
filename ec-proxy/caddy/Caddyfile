@@ -21,7 +21,7 @@ processing.envirocar.org:80, processing.envirocar.org:443, localhost:80, localho
         rule allow
         ip 80.156.182.234
     }
-    
+
     proxy /geoserver geoserver:8080 {
         transparent
     }
@@ -29,16 +29,19 @@ processing.envirocar.org:80, processing.envirocar.org:443, localhost:80, localho
     proxy /dsm dsm:8080 {
         transparent
         without /dsm
+        header_upstream X-Forwarded-Prefix /dsm
     }
+
 
     proxy /usm usm:8080 {
         transparent
         without /usm
+        header_upstream X-Forwarded-Prefix /usm
     }
 
     proxy /app webapp:80 {
         transparent
-	without /app
+        without /app
     }
 
     proxy / landingpage:80 {
