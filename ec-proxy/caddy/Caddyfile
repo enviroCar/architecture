@@ -26,17 +26,17 @@ processing.envirocar.org:80, processing.envirocar.org:443 {
         transparent
     }
 
-    proxy /dms dsm:8080 {
+    proxy /dsm dsm:8080 {
         transparent
-        without /dms
-        header_upstream X-Forwarded-Prefix /dms
+        without /dsm
+        header_upstream X-Forwarded-Prefix /dsm
     }
 
 
-    proxy /ums usm:8080 {
+    proxy /usm usm:8080 {
         transparent
-        without /ums
-        header_upstream X-Forwarded-Prefix /ums
+        without /usm
+        header_upstream X-Forwarded-Prefix /usm
     }
 
     proxy /app webapp:80 {
