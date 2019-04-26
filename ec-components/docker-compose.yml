@@ -128,6 +128,16 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
+  landingpage:
+    image: ${REGISTRY}/ec-components/landingpage:latest
+    build:
+      context: https://github.com/enviroCar/enviroCar-landing-page.git
+    networks:
+      - ec-user-api
+      - ec-data-api
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
 networks:
   ec-user-api:
     driver: bridge
