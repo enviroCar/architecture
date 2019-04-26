@@ -16,6 +16,11 @@ processing.envirocar.org:80, processing.envirocar.org:443, localhost:80, localho
     proxy /jenkins jenkins:8080 {
         transparent
     }
+
+    ipfilter /jenkins {
+        rule allow
+        ip 80.156.182.234
+    }
     
     proxy /geoserver geoserver:8080 {
         transparent
