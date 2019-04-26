@@ -105,6 +105,11 @@ services:
     networks:
       - ec-user-api
       - ec-data-api
+    environment:
+      EC_BASE_URL: https://envirocar.org/auth-proxy/api
+      EC_BASE: https://envirocar.org/auth-proxy
+      EC_WEBSITE_BASE: https://envirocar.org/
+      EC_SERVER_BASE: https://envirocar.org/api/stable
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
