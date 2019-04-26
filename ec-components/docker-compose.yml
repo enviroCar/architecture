@@ -21,6 +21,11 @@ services:
       - ./data/:/var/lib/postgresql/data
     networks:
       - ec-data-api
+    healthcheck:
+      test: pg_isready -q -h localhost -d ${POSTGRES_DB} -U ${POSTGRES_USER}
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   ### Data Management Service
   mongo-data:
@@ -29,6 +34,11 @@ services:
       - 27017:27017
     networks:
       - ec-data-api
+    healthcheck:
+      test: mongo $(hostname -i || echo localhost) --eval 'quit(db.runCommand({ping:1}).ok ?0:1)'
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   dsm:
     image: ${REGISTRY}/ec-components/dsm:latest
@@ -56,6 +66,11 @@ services:
       - 28017:27017
     networks:
       - ec-user-api
+    healthcheck:
+      test: mongo $(hostname -i || echo localhost) --eval 'quit(db.runCommand({ping:1}).ok ?0:1)'
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   usm:
     image: ${REGISTRY}/ec-components/usm:latest
