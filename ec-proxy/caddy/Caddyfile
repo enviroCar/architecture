@@ -41,6 +41,10 @@ processing.envirocar.org:80, processing.envirocar.org:443, localhost:80, localho
 	without /app
     }
 
+    proxy / landingpage:80 {
+        transparent
+    }
+
     tls self_signed
 
 }
