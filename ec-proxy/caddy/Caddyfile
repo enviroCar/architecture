@@ -38,6 +38,7 @@ processing.envirocar.org:80, processing.envirocar.org:443, localhost:80, localho
 
     proxy /app webapp:80 {
         transparent
+	without /app
     }
 
     tls self_signed
