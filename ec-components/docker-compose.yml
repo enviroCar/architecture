@@ -35,7 +35,7 @@ services:
     networks:
       - ec-data-api
     healthcheck:
-      test: mongo $(hostname -i || echo localhost) --eval 'quit(db.runCommand({ping:1}).ok ?0:1)'
+      test: "mongo $(hostname -i || echo localhost) --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
       interval: 10s
       timeout: 5s
       retries: 5
@@ -67,7 +67,7 @@ services:
     networks:
       - ec-user-api
     healthcheck:
-      test: mongo $(hostname -i || echo localhost) --eval 'quit(db.runCommand({ping:1}).ok ?0:1)'
+      test: "mongo $(hostname -i || echo localhost) --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
       interval: 10s
       timeout: 5s
       retries: 5
