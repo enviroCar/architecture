@@ -1,4 +1,4 @@
-processing.envirocar.org:80, processing.envirocar.org:443, localhost:80, localhost:443 {
+processing.envirocar.org:80, processing.envirocar.org:443 {
 
     proxy /kibana kibana:5601 {
         without /kibana
@@ -48,7 +48,6 @@ processing.envirocar.org:80, processing.envirocar.org:443, localhost:80, localho
         transparent
     }
 
-    tls self_signed
-
+ 
 }
 
