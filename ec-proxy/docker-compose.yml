@@ -13,10 +13,8 @@ services:
       - 443:443
     #  - 4443:4443
     volumes:
-      - "./caddy/Caddyfile:/etc/Caddyfile"
-      - "./.caddy:/root/.caddy"
-    #- "./config/cert.pem:/etc/cert.pem"
-    #- "./config/key.pem:/etc/key.pem"
+      - ./caddy/Caddyfile:/etc/Caddyfile
+      - caddy-data:/root/.caddy
     environment:
       - ACME_AGREE=true
     networks:
@@ -26,6 +24,10 @@ services:
       - eccicd_shared
       - eccomponents_ec-user-api
       - eccomponents_ec-data-api
+
+volumes:
+  caddy-data:
+    driver: local
 
 networks:
   shared:

@@ -30,7 +30,7 @@ services:
     #ports:
     #  - 9092:9092
     volumes:
-      - ./kafka/data:/var/lib/kafka/data
+      - kafka-data:/var/lib/kafka/data
     networks:
       - shared
 
@@ -87,6 +87,8 @@ services:
 
 volumes:
   esdata:
+    driver: local
+  kafka-data:
     driver: local
 
 networks:

@@ -18,7 +18,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=mapserver
     volumes:
-      - ./data/:/var/lib/postgresql/data
+      - mapserver-data:/var/lib/postgresql/data
     networks:
       - ec-data-api
     healthcheck:
@@ -34,6 +34,8 @@ services:
     #  - 27017:27017
     networks:
       - ec-data-api
+    volumes:
+      - mongo-data-data:/data
     healthcheck:
       test: "mongo localhost --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
       interval: 10s
@@ -66,6 +68,8 @@ services:
     #  - 28017:27017
     networks:
       - ec-user-api
+    volumes:
+      - mongo-user-data:/data
     healthcheck:
       test: "mongo localhost --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
       interval: 10s
@@ -137,6 +141,14 @@ services:
       - ec-data-api
     labels:
       - com.centurylinklabs.watchtower.enable=true
+
+volumes:
+  mapserver-data:
+    driver: local
+  mongo-user-data:
+    driver: local
+  mongo-data-data:
+    driver: local
 
 networks:
   ec-user-api:
