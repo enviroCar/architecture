@@ -2,28 +2,40 @@
 
 Docker Architecture for envirocar.org
 
+## Base Architecture
 
-## Base Architecture 
+### ec-base
+* Zookeeper
+* Kafka
+* ElasticSearch
+* Kibana
+* Filebeat
+
+### ec-cicd
+* Docker Registry
+* Docker Engine
+* Jenkins
+* Watchtower
+
+### ec-components
 * GeoServer
 * PostgreSQL (inkl. OSM-Daten)
 * MongoDB (2 Instanzen)
 * enviroCar-UMS
 * enviroCar-DMS
-* (WebApp in Docker)
-* (Auth-Proxy)
+* Auth-Proxy
+* WebApp
+* Landing Page
+
+### ec-proxy
+* Caddy
+
+### Todo
 * Processing Service MapMatching
 * Processing Service Statistics
 * Base Infrastructure
-  * Caddy
-  * ELK
   * Config-Management? (etcd, redis)
-  * Kafka
-  * Zookeeper
   * Apache Flink (oder was auch immer)
-* CI/CD/CX
-  * Watchtower
-  * Docker Registry
-  * Jenkins
 
 # Troubleshooting
 ## Setting up ElasticSearch on Docker
