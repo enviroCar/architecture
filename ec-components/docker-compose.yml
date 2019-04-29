@@ -4,8 +4,8 @@ services:
   geoserver:
     image: kartoza/geoserver:${GEOSERVER_VERSION}
     hostname: geoserver
-    ports:
-      - 8089:8080
+    #ports:
+    #  - 8089:8080
     depends_on:
       - mapserver-db
     networks:
@@ -30,8 +30,8 @@ services:
   ### Data Management Service
   mongo-data:
     image: mongo:${MONGODB_VERSION}
-    ports:
-      - 27017:27017
+    #ports:
+    #  - 27017:27017
     networks:
       - ec-data-api
     healthcheck:
@@ -52,8 +52,8 @@ services:
       - ec-data-api
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
-    ports:
-      - 8082:8080
+    #ports:
+    #  - 8082:8080
     depends_on:
       - mongo-data
     labels:
@@ -62,8 +62,8 @@ services:
   ### User Management Service
   mongo-user:
     image: mongo:${MONGODB_VERSION}
-    ports:
-      - 28017:27017
+    #ports:
+    #  - 28017:27017
     networks:
       - ec-user-api
     healthcheck:
@@ -86,8 +86,8 @@ services:
       - ec-user-api
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
-    ports:
-      - 8081:8080
+    #ports:
+    #  - 8081:8080
     depends_on:
       - mongo-user
     labels:
