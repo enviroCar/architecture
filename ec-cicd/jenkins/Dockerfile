@@ -5,7 +5,7 @@ USER root
 RUN apk --no-cache add docker \
  && mkdir -p /usr/share/jenkins/jobs/
 
-COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+COPY plugins.txt     /usr/share/jenkins/ref/plugins.txt
 COPY security.groovy /usr/share/jenkins/ref/init.groovy.d/01_security.groovy
 COPY jobs.groovy     /usr/share/jenkins/ref/init.groovy.d/02_jobs.groovy
 
