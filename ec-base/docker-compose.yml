@@ -85,11 +85,38 @@ services:
     networks:
       - elk
 
+  ftp:
+    build: https://github.com/enviroCar/vsftpd-docker.git
+    image: ${REGISTRY}/ec-base/ftp:latest
+    ports:
+      - "20:20"
+      - "21:21"
+      - "21100-21110:21100-21110"
+    volumes:
+      - caddy-data:/var/lib/caddy
+      - ftp-data:/srv/ftp
+    environment:
+      - CERT_FILE=/var/lib/caddy/acme/acme-v02.api.letsencrypt.org/sites/processing.envirocar.org/processing.envirocar.org.crt
+      - CERT_KEY_FILE=/var/lib/caddy/acme/acme-v02.api.letsencrypt.org/sites/processing.envirocar.org/processing.envirocar.org.key
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
+      - PASV_ADDRESS=processing.envirocar.org
+      - PASV_ADDR_RESOLVE=YES
+      - FTP_USER_NAME=ftpadmin
+      - FTP_USER_PASS=${FTP_PASSWORD}
+      - ALLOW_ANON=YES
+  networks:
+    - shared
+
 volumes:
   esdata:
     driver: local
   kafka-data:
     driver: local
+  ftp-data:
+    driver: local
+  caddy-data:
+    external: true
 
 networks:
   shared:
