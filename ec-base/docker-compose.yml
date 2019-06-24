@@ -93,7 +93,7 @@ services:
       - "21:21"
       - "21100-21110:21100-21110"
     volumes:
-      - caddy-data:/var/lib/caddy
+      - ecproxy_caddy-data:/var/lib/caddy
       - ftp-data:/srv/ftp
     environment:
       - CERT_FILE=/var/lib/caddy/acme/acme-v02.api.letsencrypt.org/sites/processing.envirocar.org/processing.envirocar.org.crt
@@ -115,7 +115,7 @@ volumes:
     driver: local
   ftp-data:
     driver: local
-  caddy-data:
+  ecproxy_caddy-data:
     external: true
 
 networks:
