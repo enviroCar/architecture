@@ -105,8 +105,8 @@ services:
       - FTP_USER_NAME=ftpadmin
       - FTP_USER_PASS=${FTP_PASSWORD}
       - ALLOW_ANON=YES
-  networks:
-    - shared
+    networks:
+      - shared
 
 volumes:
   esdata:
