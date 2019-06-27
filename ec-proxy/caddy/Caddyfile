@@ -1,5 +1,9 @@
 processing.envirocar.org {
 
+    redir 302 {
+        /app /app/
+    }
+
     proxy /kibana kibana:5601 {
         without /kibana
     }
