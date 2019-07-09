@@ -36,7 +36,6 @@ processing.envirocar.org {
         header_upstream X-Forwarded-Prefix /dsm
     }
 
-
     proxy /usm usm:8080 {
         transparent
         without /usm
@@ -52,6 +51,8 @@ processing.envirocar.org {
         transparent
     }
 
-    
+    proxy /mapmatching mapmatching:8080 {
+        transparent
+    }
 }
 
