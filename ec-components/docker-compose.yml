@@ -28,6 +28,22 @@ services:
       timeout: 5s
       retries: 5
 
+  ### MapMatching Service
+  mapmatching:
+    image: ${REGISTRY}/ec-components/mapmatching:latest
+    networks:
+      - ec-data-api
+    environment:
+      - BAREFOOT_POSTGIS_HOST=mapserver-db
+      - BAREFOOT_POSTGIS_PORT=5432
+      - BAREFOOT_POSTGIS_DATABASE=osmdata
+      - BAREFOOT_POSTGIS_USER=${POSTGRES_USER}
+      - BAREFOOT_POSTGIS_PASS=${POSTGRES_PASSWORD}
+    depends_on:
+      - mapserver-db
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
   ### Data Management Service
   mongo-data:
     image: mongo:${MONGODB_VERSION}
