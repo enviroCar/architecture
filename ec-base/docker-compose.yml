@@ -36,11 +36,7 @@ services:
 
   ### ELK Stack
   elasticsearch:
-    image: ${REGISTRY}/ec-base/elasticsearch:latest
-    build:
-      context: ./elasticsearch
-      args:
-        ELK_VERSION: ${ELK_VERSION}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
     #ports:
     #  - 9200:9200
     #  - 9300:9300
