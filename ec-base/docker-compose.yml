@@ -27,8 +27,8 @@ services:
       KAFKA_MESSAGE_MAX_BYTES: 5048576
       KAFKA_MAX_REQUEST_SIZE: 5048576
       KAFKA_MAX_PARTITION_FETCH_BYTES: 5048576
-    #ports:
-    #  - 9092:9092
+    ports:
+      - 9092:9092
     volumes:
       - kafka-data:/var/lib/kafka/data
     networks:

@@ -18,7 +18,8 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - mapserver-data:/var/lib/postgresql/data
+      - /var/lib/docker-compose/mapserver/pgdata:/var/lib/postgresql/data
+    #  - mapserver-data:/var/lib/postgresql/data
     networks:
       - ec-data-api
     healthcheck:
@@ -26,6 +27,22 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  ### MapMatching Service
+  mapmatching:
+    image: ${REGISTRY}/ec-components/mapmatching:latest
+    networks:
+      - ec-data-api
+    environment:
+      - BAREFOOT_POSTGIS_HOST=mapserver-db
+      - BAREFOOT_POSTGIS_PORT=5432
+      - BAREFOOT_POSTGIS_DATABASE=osmdata
+      - BAREFOOT_POSTGIS_USER=${POSTGRES_USER}
+      - BAREFOOT_POSTGIS_PASS=${POSTGRES_PASSWORD}
+    depends_on:
+      - mapserver-db
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
 
   ### Data Management Service
 #  mongo-data:
