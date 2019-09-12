@@ -1,13 +1,11 @@
 version: "3"
 services:
   docker-engine:
-    build:
-      context: ./docker-engine
-    image: ${REGISTRY}/ec-cicd/docker-engine:latest
+    image: docker:dind
     privileged: true
     depends_on:
       - registry
-    command: --insecure-registry registry:5000
+    command: --insecure-registry registry:5000 --host tcp://0.0.0.0:2375
     networks:
       - shared
 
@@ -31,9 +29,7 @@ services:
       - shared
 
   watchtower:
-    build:
-      context: ./watchtower
-    image: ${REGISTRY}/ec-cicd/watchtower:latest
+    image:  containrrr/watchtower:latest
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -47,9 +43,7 @@ services:
       - shared
 
   registry:
-    build:
-      context: ./registry
-    image: ${REGISTRY}/ec-cicd/registry:latest
+    image: registry:2
     restart: always
     ports:
       - 5000:5000
