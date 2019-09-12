@@ -28,119 +28,119 @@ services:
       retries: 5
 
   ### Data Management Service
-  mongo-data:
-    image: mongo:${MONGODB_VERSION}
-    #ports:
-    #  - 27017:27017
-    networks:
-      - ec-data-api
-    volumes:
-      - mongo-data-data:/data
-    healthcheck:
-      test: "mongo localhost --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
-      interval: 10s
-      timeout: 5s
-      retries: 5
+#  mongo-data:
+#    image: mongo:${MONGODB_VERSION}
+#    #ports:
+#    #  - 27017:27017
+#    networks:
+#      - ec-data-api
+#    volumes:
+#      - mongo-data-data:/data
+#    healthcheck:
+#      test: "mongo localhost --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
 
-  dsm:
-    image: ${REGISTRY}/ec-components/dsm:latest
-    volumes:
-      - ./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
-      - ./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
-      - ./dsm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
-      - ./dsm/mail.properties:/var/lib/jetty/mail.properties:ro
-      - ./dsm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
-    networks:
-      - ec-data-api
-    environment:
-      JAVA_OPTIONS: -Djava.awt.headless=true
-    #ports:
-    #  - 8082:8080
-    depends_on:
-      - mongo-data
-    labels:
-      - com.centurylinklabs.watchtower.enable=true
+#  dsm:
+#    image: ${REGISTRY}/ec-components/dsm:latest
+#    volumes:
+#      - ./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
+#      - ./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
+#      - ./dsm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+#      - ./dsm/mail.properties:/var/lib/jetty/mail.properties:ro
+#      - ./dsm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+#    networks:
+#      - ec-data-api
+#    environment:
+#      JAVA_OPTIONS: -Djava.awt.headless=true
+#    #ports:
+#    #  - 8082:8080
+#    depends_on:
+#      - mongo-data
+#    labels:
+#      - com.centurylinklabs.watchtower.enable=true
 
   ### User Management Service
-  mongo-user:
-    image: mongo:${MONGODB_VERSION}
-    #ports:
-    #  - 28017:27017
-    networks:
-      - ec-user-api
-    volumes:
-      - mongo-user-data:/data
-    healthcheck:
-      test: "mongo localhost --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
-      interval: 10s
-      timeout: 5s
-      retries: 5
+#  mongo-user:
+#    image: mongo:${MONGODB_VERSION}
+#    #ports:
+#    #  - 28017:27017
+#    networks:
+#      - ec-user-api
+#    volumes:
+#      - mongo-user-data:/data
+#    healthcheck:
+#      test: "mongo localhost --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
 
-  usm:
-    image: ${REGISTRY}/ec-components/usm:latest
-    build: 
-      context: https://github.com/enviroCar/enviroCar-server.git#usm
-    volumes:
-      - ./usm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
-      - ./usm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
-      - ./usm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
-      - ./usm/mail.properties:/var/lib/jetty/mail.properties:ro
-      - ./usm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
-    networks:
-      - ec-user-api
-    environment:
-      JAVA_OPTIONS: -Djava.awt.headless=true
-    #ports:
-    #  - 8081:8080
-    depends_on:
-      - mongo-user
-    labels:
-      - com.centurylinklabs.watchtower.enable=true
+#  usm:
+#    image: ${REGISTRY}/ec-components/usm:latest
+#    build: 
+#      context: https://github.com/enviroCar/enviroCar-server.git#usm
+#    volumes:
+#      - ./usm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
+#      - ./usm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
+#      - ./usm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+#      - ./usm/mail.properties:/var/lib/jetty/mail.properties:ro
+#      - ./usm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+#    networks:
+#      - ec-user-api
+#    environment:
+#      JAVA_OPTIONS: -Djava.awt.headless=true
+#    #ports:
+#    #  - 8081:8080
+#    depends_on:
+#      - mongo-user
+#    labels:
+#      - com.centurylinklabs.watchtower.enable=true
 
-  auth-proxy:
-    image: ${REGISTRY}/ec-components/auth-proxy:latest
-    build:
-      context: https://github.com/enviroCar/auth-proxy.git
-    depends_on:
-      - usm
-      - dsm
-    networks:
-      - ec-user-api
-      - ec-data-api
-    environment:
-      AUTH_PROXY_CONTEXT_PATH: /auth-proxy
-      AUTH_PROXY_LOG_LEVEL: INFO
-      AUTH_PROXY_TARGET_URI: http://processing.envirocar.org/usm/
-    labels:
-      - com.centurylinklabs.watchtower.enable=true
+#  auth-proxy:
+#    image: ${REGISTRY}/ec-components/auth-proxy:latest
+#    build:
+#      context: https://github.com/enviroCar/auth-proxy.git
+#    depends_on:
+#      - usm
+#      - dsm
+#    networks:
+#      - ec-user-api
+#      - ec-data-api
+#    environment:
+#      AUTH_PROXY_CONTEXT_PATH: /auth-proxy
+#      AUTH_PROXY_LOG_LEVEL: INFO
+#      AUTH_PROXY_TARGET_URI: http://processing.envirocar.org/usm/
+#    labels:
+#      - com.centurylinklabs.watchtower.enable=true
 
-  webapp:
-    image: ${REGISTRY}/ec-components/webapp:latest
-    build:
-      context: https://github.com/enviroCar/envirocar-www-ng.git
-    depends_on:
-      - usm
-      - dsm
-    networks:
-      - ec-user-api
-      - ec-data-api
-    environment:
-      EC_BASE_URL: https://envirocar.org/auth-proxy/api
-      EC_BASE: https://envirocar.org/auth-proxy
-      EC_WEBSITE_BASE: https://envirocar.org/
-      EC_SERVER_BASE: https://envirocar.org/api/stable
-    labels:
-      - com.centurylinklabs.watchtower.enable=true
+#  webapp:
+#    image: ${REGISTRY}/ec-components/webapp:latest
+#    build:
+#      context: https://github.com/enviroCar/envirocar-www-ng.git
+#    depends_on:
+#      - usm
+#      - dsm
+#    networks:
+#      - ec-user-api
+#      - ec-data-api
+#    environment:
+#      EC_BASE_URL: https://envirocar.org/auth-proxy/api
+#      EC_BASE: https://envirocar.org/auth-proxy
+#      EC_WEBSITE_BASE: https://envirocar.org/
+#      EC_SERVER_BASE: https://envirocar.org/api/stable
+#    labels:
+#      - com.centurylinklabs.watchtower.enable=true
 
-  landingpage:
-    image: ${REGISTRY}/ec-components/landingpage:latest
-    build:
-      context: https://github.com/enviroCar/enviroCar-landing-page.git
-    networks:
-      - ec-user-api
-      - ec-data-api
-    labels:
-      - com.centurylinklabs.watchtower.enable=true
+#  landingpage:
+#    image: ${REGISTRY}/ec-components/landingpage:latest
+#    build:
+#      context: https://github.com/enviroCar/enviroCar-landing-page.git
+#    networks:
+#      - ec-user-api
+#      - ec-data-api
+#    labels:
+#      - com.centurylinklabs.watchtower.enable=true
 
 volumes:
   mapserver-data:
