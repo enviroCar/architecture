@@ -15,8 +15,14 @@ services:
     volumes:
       - ./caddy/Caddyfile:/etc/Caddyfile
       - caddy-data:/root/.caddy
-    environment:
-      - ACME_AGREE=true
+    command:
+      - "--conf"
+      - "/etc/Caddyfile"
+      - "--port"
+      - "443"
+      - "--log"
+      - "stdout"
+      - "--agree=true"
     networks:
       - shared
       - base_shared

@@ -1,58 +1,62 @@
-processing.envirocar.org {
 
-    redir 302 {
-        /app /app/
-    }
+http://localhost https://localhost http://processing.envirocar.org https://processing.envirocar.org http://116.202.82.136 https://116.202.82.136
 
-    proxy /kibana kibana:5601 {
-        without /kibana
-    }
+bind 0.0.0.0
 
-    ipfilter /kibana {
-        rule allow
-        ip 80.156.182.234
-    }
+tls self_signed
 
-    proxy /auth-proxy auth-proxy:9999 {
-        transparent
-    }
+redir 302 {
+    /app /app/
+}
 
-    proxy /jenkins jenkins:8080 {
-        transparent
-    }
+proxy /kibana kibana:5601 {
+    without /kibana
+}
 
-    ipfilter /jenkins {
-        rule allow
-        ip 80.156.182.234
-    }
+ipfilter /kibana {
+    rule allow
+    ip 80.156.182.234 116.202.82.136
+}
 
-    proxy /geoserver geoserver:8080 {
-        transparent
-    }
+proxy /auth-proxy auth-proxy:9999 {
+    transparent
+}
 
-    proxy /dsm dsm:8080 {
-        transparent
-        without /dsm
-        header_upstream X-Forwarded-Prefix /dsm
-    }
+proxy /jenkins jenkins:8080 {
+    transparent
+}
 
-    proxy /usm usm:8080 {
-        transparent
-        without /usm
-        header_upstream X-Forwarded-Prefix /usm
-    }
+ipfilter /jenkins {
+    rule allow
+    ip 80.156.182.234 116.202.82.136
+}
 
-    proxy /app webapp:80 {
-        transparent
-        without /app
-    }
+proxy /geoserver geoserver:8080 {
+    transparent
+}
 
-    proxy / landingpage:80 {
-        transparent
-    }
+proxy /dsm dsm:8080 {
+    transparent
+    without /dsm
+    header_upstream X-Forwarded-Prefix /dsm
+}
 
-    proxy /mapmatching mapmatching:8080 {
-        transparent
-    }
+proxy /usm usm:8080 {
+    transparent
+    without /usm
+    header_upstream X-Forwarded-Prefix /usm
+}
+
+proxy /app webapp:80 {
+    transparent
+    without /app
+}
+
+proxy / landingpage:80 {
+    transparent
+}
+
+proxy /mapmatching mapmatching:8080 {
+    transparent
 }
 
