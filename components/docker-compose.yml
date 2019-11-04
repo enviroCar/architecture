@@ -31,6 +31,9 @@ services:
   ### MapMatching Service
   mapmatching:
     image: ${REGISTRY}/ec-components/mapmatching:latest
+    build:
+      context: https://github.com/enviroCar/enviroCar-mapmatching.git#master
+      dockerfile: docker/service/Dockerfile
     networks:
       - data-api
     environment:
@@ -61,6 +64,8 @@ services:
 
   dsm:
     image: ${REGISTRY}/ec-components/dsm:latest
+    build:
+      context: https://github.com/enviroCar/enviroCar-server.git#dsm
     volumes:
       - ./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
       - ./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
