@@ -4,20 +4,20 @@ Docker Architecture for envirocar.org
 
 ## Base Architecture
 
-### ec-base
+### base
 * Zookeeper
 * Kafka
 * ElasticSearch
 * Kibana
 * Filebeat
 
-### ec-cicd
+### cicd
 * Docker Registry
 * Docker Engine
 * Jenkins
 * Watchtower
 
-### ec-components
+### components
 * GeoServer
 * PostgreSQL (inkl. OSM-Daten)
 * MongoDB (2 Instanzen)
@@ -27,7 +27,7 @@ Docker Architecture for envirocar.org
 * WebApp
 * Landing Page
 
-### ec-proxy
+### proxy
 * Caddy
 
 ### Todo
