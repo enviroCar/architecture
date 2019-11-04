@@ -7,18 +7,18 @@ services:
     #ports:
     #  - 8089:8080
     depends_on:
-      - mapserver-db
+      - osm-db
     networks:
       - ec-data-api
 
-  mapserver-db:
+  osm-db:
     image: mdillon/postgis:${POSTGRES_VERSION}
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - /var/lib/docker-compose/mapserver/pgdata:/var/lib/postgresql/data
+      - ./osm-data:/var/lib/postgresql/data
     #  - mapserver-data:/var/lib/postgresql/data
     networks:
       - ec-data-api
@@ -34,13 +34,13 @@ services:
     networks:
       - ec-data-api
     environment:
-      - BAREFOOT_POSTGIS_HOST=mapserver-db
+      - BAREFOOT_POSTGIS_HOST=osm-db
       - BAREFOOT_POSTGIS_PORT=5432
       - BAREFOOT_POSTGIS_DATABASE=osmdata
       - BAREFOOT_POSTGIS_USER=${POSTGRES_USER}
       - BAREFOOT_POSTGIS_PASS=${POSTGRES_PASSWORD}
     depends_on:
-      - mapserver-db
+      - osm-db
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
