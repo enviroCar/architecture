@@ -9,7 +9,7 @@ services:
     depends_on:
       - osm-db
     networks:
-      - ec-data-api
+      - data-api
 
   osm-db:
     image: mdillon/postgis:${POSTGRES_VERSION}
@@ -21,7 +21,7 @@ services:
       - ./osm-data:/var/lib/postgresql/data
     #  - mapserver-data:/var/lib/postgresql/data
     networks:
-      - ec-data-api
+      - data-api
     healthcheck:
       test: pg_isready -q -h localhost -d ${POSTGRES_DB} -U ${POSTGRES_USER}
       interval: 10s
@@ -32,7 +32,7 @@ services:
   mapmatching:
     image: ${REGISTRY}/ec-components/mapmatching:latest
     networks:
-      - ec-data-api
+      - data-api
     environment:
       - BAREFOOT_POSTGIS_HOST=osm-db
       - BAREFOOT_POSTGIS_PORT=5432
@@ -50,7 +50,7 @@ services:
     #ports:
     #  - 27017:27017
     networks:
-      - ec-data-api
+      - data-api
     volumes:
       - mongo-data-data:/data
     healthcheck:
@@ -68,7 +68,7 @@ services:
       - ./dsm/mail.properties:/var/lib/jetty/mail.properties:ro
       - ./dsm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
     networks:
-      - ec-data-api
+      - data-api
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
     #ports:
@@ -84,7 +84,7 @@ services:
     #ports:
     #  - 28017:27017
     networks:
-      - ec-user-api
+      - user-api
     volumes:
       - mongo-user-data:/data
     healthcheck:
@@ -104,7 +104,7 @@ services:
       - ./usm/mail.properties:/var/lib/jetty/mail.properties:ro
       - ./usm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
     networks:
-      - ec-user-api
+      - user-api
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
     #ports:
@@ -122,8 +122,8 @@ services:
       - usm
       - dsm
     networks:
-      - ec-user-api
-      - ec-data-api
+      - user-api
+      - data-api
     environment:
       AUTH_PROXY_CONTEXT_PATH: /auth-proxy
       AUTH_PROXY_LOG_LEVEL: INFO
@@ -139,8 +139,8 @@ services:
       - usm
       - dsm
     networks:
-      - ec-user-api
-      - ec-data-api
+      - user-api
+      - data-api
     environment:
       EC_BASE_URL: https://envirocar.org/auth-proxy/api
       EC_BASE: https://envirocar.org/auth-proxy
@@ -154,8 +154,8 @@ services:
     build:
       context: https://github.com/enviroCar/enviroCar-landing-page.git
     networks:
-      - ec-user-api
-      - ec-data-api
+      - user-api
+      - data-api
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
@@ -168,7 +168,7 @@ volumes:
     driver: local
 
 networks:
-  ec-user-api:
+  user-api:
     driver: bridge
-  ec-data-api:
+  data-api:
     driver: bridge

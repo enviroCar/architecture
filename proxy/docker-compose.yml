@@ -19,11 +19,11 @@ services:
       - ACME_AGREE=true
     networks:
       - shared
-      - ecbase_shared
-      - ecbase_elk
-      - eccicd_shared
-      - eccomponents_ec-user-api
-      - eccomponents_ec-data-api
+      - base_shared
+      - base_elk
+      - cicd_shared
+      - components_user-api
+      - components_data-api
     healthcheck:
       test: wget -q https://processing.envirocar.org/ -O - > /dev/null || exit 1
       interval: 1m
@@ -38,13 +38,13 @@ volumes:
 networks:
   shared:
     driver: bridge
-  ecbase_shared:
+  base_shared:
     external: true
-  ecbase_elk:
+  base_elk:
     external: true
-  eccicd_shared:
+  cicd_shared:
     external: true
-  eccomponents_ec-user-api:
+  components_user-api:
     external: true
-  eccomponents_ec-data-api:
+  components_data-api:
     external: true
