@@ -1,11 +1,15 @@
 version: "3"
 services:
-  docker-engine:
+  docker:
     image: docker:dind
     privileged: true
     depends_on:
       - registry
-    command: --insecure-registry registry:5000 --host tcp://0.0.0.0:2375
+    command: --insecure-registry registry:5000
+    environment:
+      DOCKER_TLS_CERTDIR: /certs
+    volumes:
+      - docker-certs:/certs
     networks:
       - shared
 
@@ -16,15 +20,16 @@ services:
     restart: always
     volumes:
       - ./jenkins/jobs:/usr/share/jenkins/jobs
-    #ports:
-    #  - 9000:8080
+      - docker-certs:/certs:ro
     environment:
-      DOCKER_HOST: tcp://docker-engine:2375
       JENKINS_USERNAME: ${JENKINS_PASSWORD}
       JENKINS_PASSWORD: ${JENKINS_PASSWORD}
       JENKINS_OPTS: --prefix=/jenkins
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_CERT_PATH: /certs/client
+      DOCKER_TLS_VERIFY: 1
     depends_on:
-      - docker-engine
+      - docker
     networks:
       - shared
 
@@ -50,10 +55,12 @@ services:
     networks:
       - shared
     volumes: 
-      - registrydata:/var/lib/registry
+      - registry-data:/var/lib/registry
 
 volumes:
-  registrydata:
+  docker-certs:
+    driver: local
+  registry-data:
     driver: local
 
 networks:
