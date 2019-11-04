@@ -34,53 +34,53 @@ services:
     networks:
       - shared
 
-#  ### ELK Stack
-#  elasticsearch:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
-#    #ports:
-#    #  - 9200:9200
-#    #  - 9300:9300
-#    networks:
-#      - elk
-#    volumes:
-#    - esdata:/usr/share/elasticsearch/data
-#    environment:
-#    - discovery.type=single-node
-#    ulimits:
-#      memlock:
-#        soft: -1
-#        hard: -1
-#
-#  kibana:
-#    image: ${REGISTRY}/ec-base/kibana:latest
-#    build:
-#      context: ./kibana/
-#      args:
-#        ELK_VERSION: ${ELK_VERSION}
-#    #ports:
-#    #  - 5601:5601
-#    environment:
-#    - ELASTICSEARCH_URL=elasticsearch:9200
-#    depends_on:
-#    - elasticsearch
-#    networks:
-#    - elk
-#
-#  filebeat:
-#    image: ${REGISTRY}/ec-base/filebeat:latest
-#    build:
-#      context: ./filebeat
-#      args:
-#        ELK_VERSION: ${ELK_VERSION}
-#    user: root
-#    volumes:
-#      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    depends_on:
-#      - elasticsearch
-#    networks:
-#      - elk
-#
+  ### ELK Stack
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+    #ports:
+    #  - 9200:9200
+    #  - 9300:9300
+    networks:
+      - elk
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  kibana:
+    image: ${REGISTRY}/ec-base/kibana:latest
+    build:
+      context: ./kibana/
+      args:
+        ELK_VERSION: ${ELK_VERSION}
+    #ports:
+    #  - 5601:5601
+    environment:
+      - ELASTICSEARCH_URL=elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+  filebeat:
+    image: ${REGISTRY}/ec-base/filebeat:latest
+    build:
+      context: ./filebeat
+      args:
+        ELK_VERSION: ${ELK_VERSION}
+    user: root
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
   ftp:
     build: https://github.com/enviroCar/vsftpd-docker.git
     image: ${REGISTRY}/ec-base/ftp:latest
