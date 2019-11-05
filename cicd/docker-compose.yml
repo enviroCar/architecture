@@ -31,11 +31,6 @@ services:
       - docker
     networks:
       - shared
-    healthcheck:
-      interval: 5s
-      timeout: 20s
-      retries: 3
-      test: "wget http://localhost:8080/jenkins -q -O - > /dev/null 2>&1"
 
   watchtower:
     image:  containrrr/watchtower:latest
