@@ -7,8 +7,6 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       zk_id: "1"
-    #ports:
-    #  - 2181:2181
     networks:
       - shared
 
@@ -41,9 +39,6 @@ services:
       context: ./elastic/
       args:
         ELK_VERSION: ${ELK_VERSION}
-    #ports:
-    #  - 9200:9200
-    #  - 9300:9300
     networks:
       - shared
     volumes:
@@ -61,8 +56,6 @@ services:
       context: ./kibana/
       args:
         ELK_VERSION: ${ELK_VERSION}
-    #ports:
-    #  - 5601:5601
     environment:
       - ELASTICSEARCH_URL=elastic:9200
     depends_on:
