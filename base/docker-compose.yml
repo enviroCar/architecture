@@ -35,10 +35,10 @@ services:
       - shared
 
   ### ELK Stack
-  elasticsearch:
-    image: ${REGISTRY}/ec-base/elasticsearch:${ELK_VERSION}
+  elastic:
+    image: ${REGISTRY}/ec-base/elastic:${ELK_VERSION}
     build:
-      context: ./elasticsearch/
+      context: ./elastic/
       args:
         ELK_VERSION: ${ELK_VERSION}
     #ports:
@@ -47,7 +47,7 @@ services:
     networks:
       - shared
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - elastic-data:/usr/share/elasticsearch/data
     environment:
       - discovery.type=single-node
     ulimits:
@@ -64,9 +64,9 @@ services:
     #ports:
     #  - 5601:5601
     environment:
-      - ELASTICSEARCH_URL=elasticsearch:9200
+      - ELASTICSEARCH_URL=elastic:9200
     depends_on:
-      - elasticsearch
+      - elastic
     networks:
       - shared
 
@@ -81,13 +81,13 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - elasticsearch
+      - elastic
     networks:
       - shared
 
   ftp:
-    build: https://github.com/enviroCar/vsftpd-docker.git
     image: ${REGISTRY}/ec-base/ftp:latest
+    build: https://github.com/enviroCar/vsftpd-docker.git
     ports:
       - "20:20"
       - "21:21"
@@ -109,7 +109,7 @@ services:
       - shared
 
 volumes:
-  esdata:
+  elastic-data:
     driver: local
   kafka-data:
     driver: local

@@ -12,7 +12,7 @@ processors:
   - add_docker_metadata: ~
 
 output.elasticsearch:
-  hosts: ["elasticsearch:9200"]
+  hosts: ["elastic:9200"]
 
 logging.to_files: true
 logging.to_syslog: false
