@@ -36,7 +36,11 @@ services:
 
   ### ELK Stack
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+    image: ${REGISTRY}/ec-base/elasticsearch:${ELK_VERSION}
+    build:
+      context: ./elasticsearch/
+      args:
+        ELK_VERSION: ${ELK_VERSION}
     #ports:
     #  - 9200:9200
     #  - 9300:9300
@@ -52,7 +56,7 @@ services:
         hard: -1
 
   kibana:
-    image: ${REGISTRY}/ec-base/kibana:latest
+    image: ${REGISTRY}/ec-base/kibana:${ELK_VERSION}
     build:
       context: ./kibana/
       args:
@@ -64,10 +68,10 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk
+      - shared
 
   filebeat:
-    image: ${REGISTRY}/ec-base/filebeat:latest
+    image: ${REGISTRY}/ec-base/filebeat:${ELK_VERSION}
     build:
       context: ./filebeat
       args:
