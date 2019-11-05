@@ -45,7 +45,7 @@ services:
     #  - 9200:9200
     #  - 9300:9300
     networks:
-      - elk
+      - shared
     volumes:
       - esdata:/usr/share/elasticsearch/data
     environment:
@@ -83,7 +83,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk
+      - shared
 
   ftp:
     build: https://github.com/enviroCar/vsftpd-docker.git
@@ -121,11 +121,4 @@ volumes:
 networks:
   shared:
     driver: bridge
-  elk:
-    driver: bridge
-  cicd_shared:
-    external: true
-  components_userapi:
-    external: true
-  components_dataapi:
-    external: true
+

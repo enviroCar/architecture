@@ -26,10 +26,8 @@ services:
     networks:
       - shared
       - base_shared
-      - base_elk
       - cicd_shared
-      - components_user-api
-      - components_data-api
+      - components_shared
     healthcheck:
       test: wget -q https://processing.envirocar.org/ -O - > /dev/null || exit 1
       interval: 1m
@@ -46,11 +44,7 @@ networks:
     driver: bridge
   base_shared:
     external: true
-  base_elk:
-    external: true
   cicd_shared:
     external: true
-  components_user-api:
-    external: true
-  components_data-api:
+  components_shared:
     external: true

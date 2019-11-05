@@ -9,7 +9,7 @@ services:
     depends_on:
       - osm-db
     networks:
-      - data-api
+      - shared
 
   osm-db:
     image: mdillon/postgis:${POSTGRES_VERSION}
@@ -21,7 +21,7 @@ services:
       - ./osm-data:/var/lib/postgresql/data
     #  - mapserver-data:/var/lib/postgresql/data
     networks:
-      - data-api
+      - shared
     healthcheck:
       test: pg_isready -q -h localhost -d ${POSTGRES_DB} -U ${POSTGRES_USER}
       interval: 10s
@@ -35,7 +35,7 @@ services:
       context: https://github.com/enviroCar/enviroCar-mapmatching.git#master
       dockerfile: docker/service/Dockerfile
     networks:
-      - data-api
+      - shared
     environment:
       - BAREFOOT_POSTGIS_HOST=osm-db
       - BAREFOOT_POSTGIS_PORT=5432
@@ -53,7 +53,7 @@ services:
     #ports:
     #  - 27017:27017
     networks:
-      - data-api
+      - shared
     volumes:
       - mongo-data-data:/data
     healthcheck:
@@ -73,7 +73,7 @@ services:
       - ./dsm/mail.properties:/var/lib/jetty/mail.properties:ro
       - ./dsm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
     networks:
-      - data-api
+      - shared
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
     #ports:
@@ -89,7 +89,7 @@ services:
     #ports:
     #  - 28017:27017
     networks:
-      - user-api
+      - shared
     volumes:
       - mongo-user-data:/data
     healthcheck:
@@ -109,7 +109,7 @@ services:
       - ./usm/mail.properties:/var/lib/jetty/mail.properties:ro
       - ./usm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
     networks:
-      - user-api
+      - shared
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
     #ports:
@@ -127,8 +127,7 @@ services:
       - usm
       - dsm
     networks:
-      - user-api
-      - data-api
+      - shared
     environment:
       AUTH_PROXY_CONTEXT_PATH: /auth-proxy
       AUTH_PROXY_LOG_LEVEL: INFO
@@ -144,8 +143,7 @@ services:
       - usm
       - dsm
     networks:
-      - user-api
-      - data-api
+      - shared
     environment:
       EC_BASE_URL: https://envirocar.org/auth-proxy/api
       EC_BASE: https://envirocar.org/auth-proxy
@@ -159,8 +157,7 @@ services:
     build:
       context: https://github.com/enviroCar/enviroCar-landing-page.git
     networks:
-      - user-api
-      - data-api
+      - shared
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
@@ -173,7 +170,5 @@ volumes:
     driver: local
 
 networks:
-  user-api:
-    driver: bridge
-  data-api:
+  shared:
     driver: bridge
