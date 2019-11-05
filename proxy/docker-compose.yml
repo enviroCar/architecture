@@ -1,13 +1,12 @@
 version: '3.4'
 services: 
-  ### Reverse Proxy
   caddy:
+    image: ${REGISTRY}/ec-proxy/caddy:latest
     build:
       context: https://github.com/abiosoft/caddy-docker.git
       dockerfile: Dockerfile-no-stats
       args:
         plugins: cors,ipfilter,realip,expires,cache
-    image: ${REGISTRY}/ec-proxy/caddy
     ports:
       - 80:80
       - 443:443
