@@ -1,13 +1,12 @@
 version: "3"
 services:
   docker:
-    image: docker:dind
+    image: ${REGISTRY}/ec-cicd/docker:dind
+    build: ./docker
     privileged: true
     depends_on:
       - registry
-    command: --insecure-registry registry:5000
-    environment:
-      DOCKER_TLS_CERTDIR: /certs
+    command: --insecure-registry registry:5000 --bip 10.17.0.1/16
     volumes:
       - docker-certs:/certs
     networks:
@@ -43,7 +42,6 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    # - /home/.docker/config.json:/config.json
     command: --interval 30 --label-enable
     environment:
       WATCHTOWER_NOTIFICATIONS: slack
