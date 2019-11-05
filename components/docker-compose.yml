@@ -10,6 +10,11 @@ services:
       - osm-db
     networks:
       - shared
+    healthcheck:
+      test: curl -s -f 'http://localhost:8080/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities'  >/dev/null 2>&1
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   osm-db:
     image: mdillon/postgis:${POSTGRES_VERSION}
