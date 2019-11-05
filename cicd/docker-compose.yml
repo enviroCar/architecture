@@ -13,10 +13,9 @@ services:
       - shared
 
   jenkins:
+    image: ${REGISTRY}/ec-cicd/jenkins:latest
     build:
       context: ./jenkins
-    image: ${REGISTRY}/ec-cicd/jenkins:latest
-    restart: always
     volumes:
       - ./jenkins/jobs:/usr/share/jenkins/jobs
       - docker-certs:/certs:ro
@@ -29,19 +28,6 @@ services:
       DOCKER_TLS_VERIFY: 1
     depends_on:
       - docker
-    networks:
-      - shared
-
-  watchtower:
-    image:  containrrr/watchtower:latest
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 30 --label-enable
-    environment:
-      WATCHTOWER_NOTIFICATIONS: slack
-      WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: ${WT_SLACK_WEBHOOK}
-      WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: watchtower
     networks:
       - shared
 
@@ -58,6 +44,20 @@ services:
       - shared
     volumes: 
       - registry-data:/var/lib/registry
+
+  watchtower:
+    image:  containrrr/watchtower:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 --label-enable
+    environment:
+      WATCHTOWER_NOTIFICATIONS: slack
+      WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: ${WT_SLACK_WEBHOOK}
+      WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: watchtower
+    networks:
+      - shared
+
 
 volumes:
   docker-certs:
