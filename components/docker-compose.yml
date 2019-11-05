@@ -2,36 +2,24 @@ version: "3"
 services:
   ### GeoServer Setup
   geoserver:
-    image: kartoza/geoserver:${GEOSERVER_VERSION}
-    hostname: geoserver
-    #ports:
-    #  - 8089:8080
+    image: ${REGISTRY}/ec-components/geoserver:latest
+    build: ./geoserver
     depends_on:
       - osm-db
     networks:
       - shared
-    healthcheck:
-      test: curl -s -f 'http://localhost:8080/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities'  >/dev/null 2>&1
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   osm-db:
-    image: mdillon/postgis:${POSTGRES_VERSION}
+    image: ${REGISTRY}/ec-components/postgres:latest
+    build: ./postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - ./osm-data:/var/lib/postgresql/data
-    #  - mapserver-data:/var/lib/postgresql/data
     networks:
       - shared
-    healthcheck:
-      test: pg_isready -q -h localhost -d ${POSTGRES_DB} -U ${POSTGRES_USER}
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   ### MapMatching Service
   mapmatching:
@@ -44,7 +32,7 @@ services:
     environment:
       - BAREFOOT_POSTGIS_HOST=osm-db
       - BAREFOOT_POSTGIS_PORT=5432
-      - BAREFOOT_POSTGIS_DATABASE=osmdata
+      - BAREFOOT_POSTGIS_DATABASE=${POSTGRES_DB}
       - BAREFOOT_POSTGIS_USER=${POSTGRES_USER}
       - BAREFOOT_POSTGIS_PASS=${POSTGRES_PASSWORD}
     depends_on:
@@ -54,18 +42,12 @@ services:
 
   ### Data Management Service
   mongo-data:
-    image: mongo:${MONGODB_VERSION}
-    #ports:
-    #  - 27017:27017
+    image: ${REGISTRY}/ec-components/mongo:latest
+    build: ./mongo
     networks:
       - shared
     volumes:
       - mongo-data-data:/data
-    healthcheck:
-      test: "mongo localhost --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   dsm:
     image: ${REGISTRY}/ec-components/dsm:latest
@@ -81,8 +63,6 @@ services:
       - shared
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
-    #ports:
-    #  - 8082:8080
     depends_on:
       - mongo-data
     labels:
@@ -90,18 +70,12 @@ services:
 
   ### User Management Service
   mongo-user:
-    image: mongo:${MONGODB_VERSION}
-    #ports:
-    #  - 28017:27017
+    image: ${REGISTRY}/ec-components/mongo:latest
+    build: ./mongo
     networks:
       - shared
     volumes:
       - mongo-user-data:/data
-    healthcheck:
-      test: "mongo localhost --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   usm:
     image: ${REGISTRY}/ec-components/usm:latest
@@ -117,8 +91,6 @@ services:
       - shared
     environment:
       JAVA_OPTIONS: -Djava.awt.headless=true
-    #ports:
-    #  - 8081:8080
     depends_on:
       - mongo-user
     labels:
@@ -167,8 +139,6 @@ services:
       - com.centurylinklabs.watchtower.enable=true
 
 volumes:
-  mapserver-data:
-    driver: local
   mongo-user-data:
     driver: local
   mongo-data-data:
