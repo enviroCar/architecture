@@ -46,7 +46,11 @@ services:
       - shared
 
   registry:
-    image: registry:2
+    image: ${REGISTRY}/ec-cicd/registry:2
+    build:
+      context: ./registry
+      args:
+        REGISTRY_VERSION: 2
     restart: always
     ports:
       - 5000:5000
@@ -54,11 +58,6 @@ services:
       - shared
     volumes: 
       - registry-data:/var/lib/registry
-    healthcheck:
-      interval: 5s
-      timeout: 20s
-      retries: 3
-      test: "wget http://localhost:5000/v2 -q -O - > /dev/null 2>&1"
 
 volumes:
   docker-certs:
