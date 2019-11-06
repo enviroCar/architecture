@@ -49,11 +49,8 @@ services:
       - shared
 
   filebeat:
-    image: ${REGISTRY}/ec-base/filebeat:${ELK_VERSION}
-    build:
-      context: ./filebeat
-      args:
-        ELK_VERSION: ${ELK_VERSION}
+    image: ${REGISTRY}/envirocar/filebeat:latest
+    build: ./filebeat
     user: root
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
