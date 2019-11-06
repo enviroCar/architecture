@@ -147,11 +147,35 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
+  qad:
+    image: ${REGISTRY}/envirocar/qad:latest
+    build: https://github.com/enviroCar/qad.git
+    networks:
+      - shared
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    volumes:
+      - base_ftp-data:/outputs
+    environment:
+      QAD_SIMPLIFY_LENGTH_CALCULATION: false
+      QAD_MAX_ANGLE_DEVIATION: 90
+      QAD_MAX_LENGTH_DEVIATION: 0.30
+      QAD_SNAPPING_TOLERANCE: 20
+      QAD_STOP_START_THRESHOLD: 5.0
+      QAD_STOP_END_THRESHOLD: 10.0
+      QAD_SEGMENT_BUFFER_SIZE: 20
+      QAD_DENSIFY_NUM_POINTS: 4
+      QAD_MAPMATCHING_ENABLE: true
+      QAD_MAPMATCHING_ENDPOINT: https://processing.envirocar.org
+      QAD_OUTPUT_PATH: /outputs
+
 volumes:
   mongo-user-data:
     driver: local
   mongo-data-data:
     driver: local
+  base_ftp-data:
+    external: true
 
 networks:
   shared:
