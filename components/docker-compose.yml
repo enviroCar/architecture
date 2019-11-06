@@ -51,8 +51,7 @@ services:
 
   dsm:
     image: ${REGISTRY}/envirocar/dsm:latest
-    build:
-      context: https://github.com/enviroCar/enviroCar-server.git#dsm
+    build: https://github.com/enviroCar/enviroCar-server.git#dsm
     volumes:
       - ./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
       - ./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
@@ -79,8 +78,7 @@ services:
 
   usm:
     image: ${REGISTRY}/envirocar/usm:latest
-    build:
-      context: https://github.com/enviroCar/enviroCar-server.git#usm
+    build: https://github.com/enviroCar/enviroCar-server.git#usm
     volumes:
       - ./usm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
       - ./usm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
@@ -98,8 +96,7 @@ services:
 
   auth-proxy:
     image: ${REGISTRY}/envirocar/auth-proxy:latest
-    build:
-      context: https://github.com/enviroCar/auth-proxy.git
+    build: https://github.com/enviroCar/auth-proxy.git
     depends_on:
       - usm
       - dsm
@@ -130,8 +127,7 @@ services:
 
   landingpage:
     image: ${REGISTRY}/envirocar/landingpage:latest
-    build:
-      context: https://github.com/enviroCar/enviroCar-landing-page.git
+    build: https://github.com/enviroCar/enviroCar-landing-page.git
     networks:
       - shared
     labels:
