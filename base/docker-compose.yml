@@ -51,11 +51,8 @@ services:
         hard: -1
 
   kibana:
-    image: ${REGISTRY}/ec-base/kibana:${ELK_VERSION}
-    build:
-      context: ./kibana/
-      args:
-        ELK_VERSION: ${ELK_VERSION}
+    image: ${REGISTRY}/envirocar/kibana:latest
+    build: ./kibana
     environment:
       - ELASTICSEARCH_URL=elastic:9200
     depends_on:
