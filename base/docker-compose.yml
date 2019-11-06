@@ -61,7 +61,7 @@ services:
       - shared
 
   ftp:
-    image: ${REGISTRY}/ec-base/ftp:latest
+    image: ${REGISTRY}/envirocar/ftp:latest
     build: https://github.com/enviroCar/vsftpd-docker.git
     ports:
       - "20:20"
@@ -82,6 +82,11 @@ services:
       - ALLOW_ANON=YES
     networks:
       - shared
+    healthcheck:
+        test: nc -z -v -w 5 localhost 21
+        interval: 10s
+        timeout: 5s
+        retries: 5
 
 volumes:
   elastic-data:
