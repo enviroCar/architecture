@@ -82,11 +82,6 @@ services:
       - ALLOW_ANON=YES
     networks:
       - shared
-    healthcheck:
-        test: nc -z -v -w 5 localhost 21
-        interval: 10s
-        timeout: 5s
-        retries: 5
 
 volumes:
   elastic-data:
