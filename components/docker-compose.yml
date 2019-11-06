@@ -157,7 +157,8 @@ services:
     volumes:
       - base_ftp-data:/outputs
     environment:
-      QAD_SIMPLIFY_LENGTH_CALCULATION: false
+      KAFKA_ENDPOINT: base_kafka_1:9092
+      QAD_SIMPLIFY_LENGTH_CALCULATION: "false"
       QAD_MAX_ANGLE_DEVIATION: 90
       QAD_MAX_LENGTH_DEVIATION: 0.30
       QAD_SNAPPING_TOLERANCE: 20
@@ -165,7 +166,7 @@ services:
       QAD_STOP_END_THRESHOLD: 10.0
       QAD_SEGMENT_BUFFER_SIZE: 20
       QAD_DENSIFY_NUM_POINTS: 4
-      QAD_MAPMATCHING_ENABLE: true
+      QAD_MAPMATCHING_ENABLE: "true"
       QAD_MAPMATCHING_ENDPOINT: https://processing.envirocar.org
       QAD_OUTPUT_PATH: /outputs
 
