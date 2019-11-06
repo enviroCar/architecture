@@ -140,14 +140,18 @@ services:
       - osm-db
     networks:
       - shared
+      - base_shared
     labels:
       - com.centurylinklabs.watchtower.enable=true
+    environment:
+      KAFKA_ENDPOINT: base_kafka_1:9092
 
   qad:
     image: ${REGISTRY}/envirocar/qad:latest
     build: https://github.com/enviroCar/qad.git
     networks:
       - shared
+      - base_shared
     labels:
       - com.centurylinklabs.watchtower.enable=true
     volumes:
@@ -176,3 +180,5 @@ volumes:
 networks:
   shared:
     driver: bridge
+  base_shared:
+    external: true
