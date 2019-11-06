@@ -1,7 +1,7 @@
 version: "3"
 services:
   docker:
-    image: ${REGISTRY}/ec-cicd/docker:dind
+    image: ${REGISTRY}/envirocar/docker:latest
     build: ./docker
     privileged: true
     depends_on:
@@ -13,7 +13,7 @@ services:
       - shared
 
   jenkins:
-    image: ${REGISTRY}/ec-cicd/jenkins:latest
+    image: ${REGISTRY}/envirocar/jenkins:latest
     build:
       context: ./jenkins
     volumes:
@@ -32,11 +32,8 @@ services:
       - shared
 
   registry:
-    image: ${REGISTRY}/ec-cicd/registry:2
-    build:
-      context: ./registry
-      args:
-        REGISTRY_VERSION: 2
+    image: ${REGISTRY}/envirocar/registry:latest
+    build: ./registry
     restart: always
     ports:
       - 5000:5000
