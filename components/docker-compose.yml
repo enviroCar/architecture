@@ -145,6 +145,11 @@ services:
       - com.centurylinklabs.watchtower.enable=true
     environment:
       KAFKA_ENDPOINT: base_kafka_1:9092
+      POSTGRES_HOST: osm-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DBNAME: ${POSTGRES_DB}
+      POSTGRES_USERNAME: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
   qad:
     image: ${REGISTRY}/envirocar/qad:latest
