@@ -1,9 +1,7 @@
 
-http://localhost https://localhost http://processing.envirocar.org https://processing.envirocar.org http://116.202.82.136 https://116.202.82.136
+http://processing.envirocar.org https://processing.envirocar.org
 
 bind 0.0.0.0
-
-tls self_signed
 
 redir 302 {
     /app /app/

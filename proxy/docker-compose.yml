@@ -1,7 +1,7 @@
 version: '3.4'
 services: 
   caddy:
-    image: ${REGISTRY}/ec-proxy/caddy:latest
+    image: ${REGISTRY}/envirocar/proxy:latest
     build:
       context: https://github.com/abiosoft/caddy-docker.git
       dockerfile: Dockerfile-no-stats
