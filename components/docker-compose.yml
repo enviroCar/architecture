@@ -2,7 +2,7 @@ version: "3"
 services:
   ### GeoServer Setup
   geoserver:
-    image: ${REGISTRY}/ec-components/geoserver:latest
+    image: ${REGISTRY}/envirocar/geoserver:latest
     build: ./geoserver
     depends_on:
       - osm-db
@@ -10,7 +10,7 @@ services:
       - shared
 
   osm-db:
-    image: ${REGISTRY}/ec-components/postgres:latest
+    image: ${REGISTRY}/envirocar/postgres:latest
     build: ./postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -23,7 +23,7 @@ services:
 
   ### MapMatching Service
   mapmatching:
-    image: ${REGISTRY}/ec-components/mapmatching:latest
+    image: ${REGISTRY}/envirocar/mapmatching:latest
     build:
       context: https://github.com/enviroCar/enviroCar-mapmatching.git#master
       dockerfile: docker/service/Dockerfile
@@ -42,7 +42,7 @@ services:
 
   ### Data Management Service
   mongo-data:
-    image: ${REGISTRY}/ec-components/mongo:latest
+    image: ${REGISTRY}/envirocar/mongo:latest
     build: ./mongo
     networks:
       - shared
@@ -50,7 +50,7 @@ services:
       - mongo-data-data:/data
 
   dsm:
-    image: ${REGISTRY}/ec-components/dsm:latest
+    image: ${REGISTRY}/envirocar/dsm:latest
     build:
       context: https://github.com/enviroCar/enviroCar-server.git#dsm
     volumes:
@@ -70,7 +70,7 @@ services:
 
   ### User Management Service
   mongo-user:
-    image: ${REGISTRY}/ec-components/mongo:latest
+    image: ${REGISTRY}/envirocar/mongo:latest
     build: ./mongo
     networks:
       - shared
@@ -78,7 +78,7 @@ services:
       - mongo-user-data:/data
 
   usm:
-    image: ${REGISTRY}/ec-components/usm:latest
+    image: ${REGISTRY}/envirocar/usm:latest
     build:
       context: https://github.com/enviroCar/enviroCar-server.git#usm
     volumes:
@@ -97,7 +97,7 @@ services:
       - com.centurylinklabs.watchtower.enable=true
 
   auth-proxy:
-    image: ${REGISTRY}/ec-components/auth-proxy:latest
+    image: ${REGISTRY}/envirocar/auth-proxy:latest
     build:
       context: https://github.com/enviroCar/auth-proxy.git
     depends_on:
@@ -113,7 +113,7 @@ services:
       - com.centurylinklabs.watchtower.enable=true
 
   webapp:
-    image: ${REGISTRY}/ec-components/webapp:latest
+    image: ${REGISTRY}/envirocar/webapp:latest
     build:
       context: https://github.com/enviroCar/envirocar-www-ng.git
     depends_on:
@@ -130,7 +130,7 @@ services:
       - com.centurylinklabs.watchtower.enable=true
 
   landingpage:
-    image: ${REGISTRY}/ec-components/landingpage:latest
+    image: ${REGISTRY}/envirocar/landingpage:latest
     build:
       context: https://github.com/enviroCar/enviroCar-landing-page.git
     networks:
