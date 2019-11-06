@@ -14,5 +14,10 @@ processors:
 output.elasticsearch:
   hosts: ["elastic:9200"]
 
-logging.to_files: true
+setup.kibana:
+  host: "https://processing.envirocar.org/kibana"
+
+logging.level: info
+logging.to_stderr: true
+logging.to_files: false
 logging.to_syslog: false
