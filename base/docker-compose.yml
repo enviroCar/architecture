@@ -3,10 +3,8 @@ services:
 
   ### Kafka Stack
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      zk_id: "1"
+    image: ${REGISTRY}/envirocar/zookeeper:latest
+    build: ./zookeeper
     networks:
       - shared
 
