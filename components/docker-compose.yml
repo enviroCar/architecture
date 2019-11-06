@@ -114,8 +114,7 @@ services:
 
   webapp:
     image: ${REGISTRY}/envirocar/webapp:latest
-    build:
-      context: https://github.com/enviroCar/envirocar-www-ng.git
+    build: https://github.com/enviroCar/envirocar-www-ng.git
     depends_on:
       - usm
       - dsm
@@ -133,6 +132,16 @@ services:
     image: ${REGISTRY}/envirocar/landingpage:latest
     build:
       context: https://github.com/enviroCar/enviroCar-landing-page.git
+    networks:
+      - shared
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
+  mean-speed-service:
+    image: ${REGISTRY}/envirocar/mean-speed-service:latest
+    build: https://github.com/enviroCar/mean-speed-service.git
+    depends_on:
+      - osm-db
     networks:
       - shared
     labels:
