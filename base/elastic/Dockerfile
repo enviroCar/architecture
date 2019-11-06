@@ -1,5 +1,4 @@
-ARG ELK_VERSION
-FROM docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+FROM docker.elastic.co/elasticsearch/elasticsearch:7.0.0
 
 
 HEALTHCHECK --interval=10s --timeout=5s --retries=5 CMD \

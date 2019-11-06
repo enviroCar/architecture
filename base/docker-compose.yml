@@ -25,11 +25,8 @@ services:
 
   ### ELK Stack
   elastic:
-    image: ${REGISTRY}/ec-base/elastic:${ELK_VERSION}
-    build:
-      context: ./elastic/
-      args:
-        ELK_VERSION: ${ELK_VERSION}
+    image: ${REGISTRY}/envirocar/elastic:latest
+    build: ./elastic
     networks:
       - shared
     volumes:
