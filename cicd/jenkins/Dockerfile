@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:alpine
+FROM jenkins/jenkins:2.202-alpine
 
 USER root
 RUN apk --no-cache add docker gettext
@@ -9,7 +9,7 @@ COPY files/ /usr/share/jenkins/ref/
 
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 
-ENV JAVA_OPTS "-Djenkins.install.runSetupWizard=false" \
+ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false" \
     JOB_CONFIGS="" \
     JENKINS_USERNAME="jenkins" \
     JENKINS_PASSWORD="jenkins"
