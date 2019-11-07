@@ -1,7 +1,7 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job@2.32">
   <actions/>
-  <description>Webapp of the enviroCar project</description>
+  <description>enviroCar Webapp</description>
   <displayName>enviroCar Webapp</displayName>
   <keepDependencies>false</keepDependencies>
   <properties>

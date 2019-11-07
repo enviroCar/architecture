@@ -1,13 +1,13 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job@2.32">
   <actions/>
-  <description>enviroCar DSM API</description>
-  <displayName>enviroCar DSM API</displayName>
+  <description>enviroCar Mean Speed Service</description>
+  <displayName>enviroCar Mean Speed Service</displayName>
   <keepDependencies>false</keepDependencies>
   <properties>
     <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.29.4">
-      <projectUrl>https://github.com/enviroCar/enviroCar-server/</projectUrl>
-      <displayName>enviroCar DSM API</displayName>
+      <projectUrl>https://github.com/enviroCar/mean-speed-service/</projectUrl>
+      <displayName>enviroCar Mean Speed Service</displayName>
     </com.coravy.hudson.plugins.github.GithubProjectProperty>
     <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.30">
       <autoRebuild>false</autoRebuild>
@@ -39,12 +39,12 @@
       <configVersion>2</configVersion>
       <userRemoteConfigs>
         <hudson.plugins.git.UserRemoteConfig>
-          <url>https://github.com/enviroCar/enviroCar-server.git</url>
+          <url>https://github.com/enviroCar/mean-speed-service.git</url>
         </hudson.plugins.git.UserRemoteConfig>
       </userRemoteConfigs>
       <branches>
         <hudson.plugins.git.BranchSpec>
-          <name>*/dsm</name>
+          <name>*/master</name>
         </hudson.plugins.git.BranchSpec>
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>

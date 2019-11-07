@@ -1,13 +1,13 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job@2.32">
   <actions/>
-  <description>MapMatching Server of the enviroCar project</description>
+  <description>enviroCar MapMatching API</description>
   <displayName>enviroCar MapMatching API</displayName>
   <keepDependencies>false</keepDependencies>
   <properties>
     <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.29.4">
       <projectUrl>https://github.com/enviroCar/enviroCar-mapmatching/</projectUrl>
-      <displayName>enviroCar MapMAtching API</displayName>
+      <displayName>enviroCar MapMatching API</displayName>
     </com.coravy.hudson.plugins.github.GithubProjectProperty>
     <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.30">
       <autoRebuild>false</autoRebuild>

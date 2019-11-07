@@ -1,7 +1,7 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job@2.32">
   <actions/>
-  <description>USM Server of the enviroCar project</description>
+  <description>enviroCar USM API</description>
   <displayName>enviroCar USM API</displayName>
   <keepDependencies>false</keepDependencies>
   <properties>
