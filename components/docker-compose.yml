@@ -5,9 +5,10 @@ services:
     image: ${REGISTRY}/envirocar/geoserver:latest
     build: ./geoserver
     environment:
-      GEOSERVER_ADMIN_USER: ${GEOSERVER_USERNAME:admin}
-      GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_PASSWORD:geoserver}
+      GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_PASSWORD}
       GEOSERVER_CSRF_WHITELIST: processing.envirocar.org
+    volumes:
+      - geoserver-data:/opt/geoserver/data_dir/
     depends_on:
       - osm-db
     networks:
@@ -186,6 +187,8 @@ volumes:
     driver: local
   base_ftp-data:
     external: true
+  geoserver-data:
+    driver: local
 
 networks:
   shared:
