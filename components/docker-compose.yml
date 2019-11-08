@@ -4,6 +4,10 @@ services:
   geoserver:
     image: ${REGISTRY}/envirocar/geoserver:latest
     build: ./geoserver
+    environment:
+      GEOSERVER_ADMIN_USER: ${GEOSERVER_USERNAME:admin}
+      GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_PASSWORD:geoserver}
+      GEOSERVER_CSRF_WHITELIST: processing.envirocar.org
     depends_on:
       - osm-db
     networks:
