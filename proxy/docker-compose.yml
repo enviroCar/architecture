@@ -27,12 +27,6 @@ services:
       - base_shared
       - cicd_shared
       - components_shared
-    healthcheck:
-      test: wget -q https://processing.envirocar.org/ -O - > /dev/null || exit 1
-      interval: 1m
-      timeout: 10s
-      retries: 3
-      start_period: 30s
 
 volumes:
   caddy-data:
