@@ -35,6 +35,11 @@ proxy /geoserver geoserver:8080 {
     transparent
 }
 
+cors /geoserver {
+    origin http://processing.envirocar.org https://processing.envirocar.org 
+    origin http://envirocar.org https://envirocar.org
+}
+
 proxy /dsm dsm:8080 {
     transparent
     without /dsm
