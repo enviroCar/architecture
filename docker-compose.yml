@@ -23,7 +23,7 @@ x-common:
     - ./stable/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
 
   api-environment: &api-environment
-    JAVA_OPTIONS: -Djava.awt.headless=true
+    JAVA_OPTIONS: "-Djava.awt.headless=true"
 
   component-labels: &component-labels
     com.centurylinklabs.watchtower.enable: "true"
@@ -59,7 +59,8 @@ services:
     networks:
       - stable
     volumes:
-      - mongo-stable-data:/data
+      - mongo-stable-data:/data/db
+      - mongo-stable-config:/data/configdb
     healthcheck: *mongo-healthcheck
 
   api-dev:
@@ -93,7 +94,8 @@ services:
     networks:
       - dev
     volumes:
-      - mongo-dev-data:/data
+      - mongo-dev-data:/data/db
+      - mongo-dev-config:/data/configdb
     healthcheck: *mongo-healthcheck
 
   auth-proxy:
@@ -194,7 +196,11 @@ services:
 volumes:
   mongo-stable-data:
     driver: local
+  mongo-stable-config:
+    driver: local
   mongo-dev-data:
+    driver: local
+  mongo-dev-config:
     driver: local
   caddy-data:
     driver: local
