@@ -1,0 +1,69 @@
+
+http://localhost http://envirocar.org https://envirocar.org {
+    tls self_signed
+
+    bind 0.0.0.0
+
+    log / stdout "{combined}"
+
+    proxy /auth-proxy auth-proxy:9999 {
+        transparent
+    }
+
+    proxy /api/dev api-dev:8080 {
+        transparent
+        without /api/dev
+        header_upstream X-Forwarded-Prefix /api/dev
+    }
+
+    proxy /api/stable api-stable:8080 {
+        transparent
+        without /api/stable
+        header_upstream X-Forwarded-Prefix /api/stable
+    }
+
+    proxy /api/anonymous api-anonymous-stable:8080 {
+        transparent
+        without /api/anonymous
+        header_upstream X-Forwarded-Prefix /api/anonymous
+    }
+    
+    proxy /api/anonymous-dev api-anonymous-dev:8080 {
+        transparent
+        without /api/anonymous-dev
+        header_upstream X-Forwarded-Prefix /api/anonymous-dev
+    }
+
+    proxy /app webapp:80 {
+        transparent
+        without /app
+    }
+
+    redir 302 {
+        /app /app/
+    }
+
+    proxy / landingpage:80 {
+        transparent
+    }
+    
+    proxy /citram citram-website:80 {
+        transparent
+        without /citram
+    }
+    
+}
+
+http://citram.de https://citram.de {
+
+    tls self_signed
+        
+    bind 0.0.0.0
+
+    log / stdout "{combined}"
+    
+    proxy / citram-website:80 {
+        transparent
+    }
+
+}

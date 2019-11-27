@@ -1,0 +1,212 @@
+version: "3.4"
+
+x-common:
+  
+  mongo-healthcheck: &mongo-healthcheck
+    interval: 10s
+    timeout: 5s
+    retries: 5 
+    test: "mongo localhost --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
+  
+  api-dev-volumes: &api-dev-volumes
+    - ./mail/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
+    - ./mail/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
+    - ./mail/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+    - ./mail/mail.properties:/var/lib/jetty/mail.properties:ro
+    - ./dev/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+
+  api-stable-volumes: &api-stable-volumes
+    - ./mail/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
+    - ./mail/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
+    - ./mail/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+    - ./mail/mail.properties:/var/lib/jetty/mail.properties:ro
+    - ./stable/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+
+  api-environment: &api-environment
+    JAVA_OPTIONS: -Djava.awt.headless=true
+
+  component-labels: &component-labels
+    com.centurylinklabs.watchtower.enable: "true"
+
+services:
+  api-stable:
+    container_name: api-stable
+    image: ${REGISTRY}/envirocar/api:stable
+    build: https://github.com/enviroCar/enviroCar-server.git#master
+    volumes: *api-stable-volumes
+    networks:
+      - stable
+    environment: *api-environment
+    depends_on:
+      - mongo-stable
+    labels: *component-labels
+  
+  api-anonymous-stable:
+    container_name: api-anonymous-stable
+    image: ${REGISTRY}/envirocar/anonymous-api:stable
+    build: https://github.com/enviroCar/enviroCar-server.git#anonymous
+    volumes: *api-stable-volumes
+    networks:
+      - stable
+    environment: *api-environment
+    depends_on:
+      - mongo-stable
+    labels: *component-labels
+
+  mongo-stable:
+    container_name: mongo-stable
+    image: mongo:4-xenial
+    networks:
+      - stable
+    volumes:
+      - mongo-stable-data:/data
+    healthcheck: *mongo-healthcheck
+
+  api-dev:
+    container_name: api-dev
+    image: ${REGISTRY}/envirocar/api:dev
+    build: https://github.com/enviroCar/enviroCar-server.git#dev
+    volumes: *api-dev-volumes
+    networks:
+      - dev
+    environment: *api-environment
+    depends_on:
+      - mongo-dev
+    labels: *component-labels
+
+  api-anonymous-dev:
+    container_name: anonymous-api-dev
+    image: ${REGISTRY}/envirocar/anonymous-api:dev
+    build: https://github.com/enviroCar/enviroCar-server.git#anonymous-develop
+    volumes: *api-dev-volumes
+    networks:
+      - dev
+    environment: *api-environment
+    depends_on:
+      - mongo-dev
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
+  mongo-dev:
+    container_name: mongo-dev
+    image: mongo:4-xenial
+    networks:
+      - dev
+    volumes:
+      - mongo-dev-data:/data
+    healthcheck: *mongo-healthcheck
+
+  auth-proxy:
+    container_name: auth-proxy
+    image: ${REGISTRY}/envirocar/auth-proxy:latest
+    build: https://github.com/enviroCar/auth-proxy.git
+    depends_on:
+      - api-stable
+    networks:
+      - stable
+    environment:
+      AUTH_PROXY_CONTEXT_PATH: /auth-proxy
+      AUTH_PROXY_LOG_LEVEL: INFO
+      AUTH_PROXY_TARGET_URI: https://${DOCKER_HOST_NAME}/api/stable/
+    labels: *component-labels
+
+  webapp:
+    container_name: webapp
+    image: ${REGISTRY}/envirocar/webapp:latest
+    build: https://github.com/enviroCar/envirocar-www-ng.git
+    depends_on:
+      - auth-proxy
+    networks:
+      - stable
+    environment:
+      EC_BASE_URL: https://${DOCKER_HOST_NAME}/auth-proxy/api
+      EC_BASE: https://${DOCKER_HOST_NAME}/auth-proxy
+      EC_WEBSITE_BASE: https://${DOCKER_HOST_NAME}/
+      EC_SERVER_BASE: https://${DOCKER_HOST_NAME}/api/stable
+    labels: *component-labels
+
+  landingpage:
+    container_name: landing-page
+    image: ${REGISTRY}/envirocar/landingpage:latest
+    build: https://github.com/enviroCar/enviroCar-landing-page.git
+    networks:
+      - stable
+    labels: *component-labels
+
+  citram-website:
+    container_name: citram-website
+    build: https://github.com/enviroCar/citram-website.git
+    image: ${REGISTRY}/envirocar/citram-website:latest
+    networks:
+      - citram
+    labels: *component-labels
+
+  registry:
+    container_name: docker-registry
+    image: registry:2
+    restart: always
+    networks:
+      - infra
+    ports:
+      - "5000:5000"
+    volumes: 
+      - registry-data:/var/lib/registry
+    healthcheck:
+      interval: 5s
+      timeout: 20s 
+      retries: 3
+      test: wget http://localhost:5000/v2 -q -O - > /dev/null 2>&1
+  
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_NOTIFICATIONS: slack
+      WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: ${WT_SLACK_WEBHOOK}
+      WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: watchtower
+    networks:
+      - infra
+    command: --interval 30 --label-enable
+
+  proxy:
+    container_name: proxy
+    image: ${REGISTRY}/envirocar/proxy:latest
+    build:
+      context: https://github.com/abiosoft/caddy-docker.git
+      dockerfile: Dockerfile-no-stats
+      args:
+        plugins: cors,ipfilter,realip,expires,cache
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/Caddyfile
+      - caddy-data:/root/.caddy
+    command: --conf /etc/Caddyfile --port 443 --log stdout --agree=true
+    networks:
+      - dev
+      - stable
+      - citram
+
+volumes:
+  mongo-stable-data:
+    driver: local
+  mongo-dev-data:
+    driver: local
+  caddy-data:
+    driver: local
+  registry-data:
+    driver: local
+
+networks:
+  dev:
+    driver: bridge
+  stable:
+    driver: bridge
+  infra:
+    driver: bridge
+  citram:
+    driver: bridge
