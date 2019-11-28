@@ -6,7 +6,7 @@ services:
     build: ./geoserver
     environment:
       GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_PASSWORD}
-      GEOSERVER_CSRF_WHITELIST: processing.envirocar.org
+      GEOSERVER_CSRF_WHITELIST: ${DOCKER_HOST_NAME}
     volumes:
       - geoserver-data:/opt/geoserver/data_dir/
     depends_on:
@@ -110,7 +110,7 @@ services:
     environment:
       AUTH_PROXY_CONTEXT_PATH: /auth-proxy
       AUTH_PROXY_LOG_LEVEL: INFO
-      AUTH_PROXY_TARGET_URI: http://processing.envirocar.org/usm/
+      AUTH_PROXY_TARGET_URI: http://${DOCKER_HOST_NAME}/usm/
     labels:
       - com.centurylinklabs.watchtower.enable=true
 
@@ -177,7 +177,7 @@ services:
       QAD_SEGMENT_BUFFER_SIZE: 20
       QAD_DENSIFY_NUM_POINTS: 4
       QAD_MAPMATCHING_ENABLE: "true"
-      QAD_MAPMATCHING_ENDPOINT: https://processing.envirocar.org
+      QAD_MAPMATCHING_ENDPOINT: https://${DOCKER_HOST_NAME}
       QAD_OUTPUT_PATH: /outputs
 
 volumes:

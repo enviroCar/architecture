@@ -15,7 +15,7 @@ services:
       - zookeeper
     environment:
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_NAME}:9092
     ports:
       - 9092:9092
     volumes:
@@ -68,14 +68,14 @@ services:
       - "21:21"
       - "21100-21110:21100-21110"
     volumes:
-      - proxy_caddy-data:/var/lib/caddy
+      - proxy_certificates:/etc/ssl/certs:ro
       - ftp-data:/srv/ftp
     environment:
-      - CERT_FILE=/var/lib/caddy/acme/acme-v02.api.letsencrypt.org/sites/processing.envirocar.org/processing.envirocar.org.crt
-      - CERT_KEY_FILE=/var/lib/caddy/acme/acme-v02.api.letsencrypt.org/sites/processing.envirocar.org/processing.envirocar.org.key
+      - CERT_FILE=/etc/ssl/certs/${DOCKER_HOST_NAME}.crt
+      - CERT_KEY_FILE=/etc/ssl/certs/${DOCKER_HOST_NAME}key
       - PASV_MIN_PORT=21100
       - PASV_MAX_PORT=21110
-      - PASV_ADDRESS=processing.envirocar.org
+      - PASV_ADDRESS=${DOCKER_HOST_NAME}
       - PASV_ADDR_RESOLVE=YES
       - FTP_USER_NAME=ftpadmin
       - FTP_USER_PASS=${FTP_PASSWORD}
@@ -90,7 +90,7 @@ volumes:
     driver: local
   ftp-data:
     driver: local
-  proxy_caddy-data:
+  proxy_certificates:
     external: true
 
 networks:

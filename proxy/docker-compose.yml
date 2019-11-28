@@ -13,15 +13,8 @@ services:
     #  - 4443:4443
     volumes:
       - ./caddy/Caddyfile:/etc/Caddyfile
-      - caddy-data:/root/.caddy
-    command:
-      - "--conf"
-      - "/etc/Caddyfile"
-      - "--port"
-      - "443"
-      - "--log"
-      - "stdout"
-      - "--agree=true"
+      - certificates:/root/.caddy/acme/acme-v02.api.letsencrypt.org/sites/${DOCKER_HOST_NAME}/
+    command: --conf /etc/Caddyfile --port 443 --log stdout--agree=true
     networks:
       - shared
       - base_shared
@@ -29,7 +22,7 @@ services:
       - components_shared
 
 volumes:
-  caddy-data:
+  certificates:
     driver: local
 
 networks:
