@@ -60,6 +60,8 @@ services:
       - ${MONGO_DATA}/stable/data:/data/db
       - ${MONGO_DATA}/stable/config:/data/configdb
     healthcheck: *mongo-healthcheck
+    labels:
+      - org.envirocar.backup.mongodb=enviroCar
 
   api-dev:
     container_name: api-dev
@@ -93,6 +95,8 @@ services:
       - ${MONGO_DATA}/dev/data:/data/db
       - ${MONGO_DATA}/dev/config:/data/configdb
     healthcheck: *mongo-healthcheck
+    labels:
+      - org.envirocar.backup.mongodb=enviroCar
 
   auth-proxy:
     container_name: auth-proxy
