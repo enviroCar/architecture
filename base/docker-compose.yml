@@ -72,7 +72,7 @@ services:
       - ftp-data:/srv/ftp
     environment:
       - CERT_FILE=/etc/ssl/certs/${DOCKER_HOST_NAME}.crt
-      - CERT_KEY_FILE=/etc/ssl/certs/${DOCKER_HOST_NAME}key
+      - CERT_KEY_FILE=/etc/ssl/certs/${DOCKER_HOST_NAME}.key
       - PASV_MIN_PORT=21100
       - PASV_MAX_PORT=21110
       - PASV_ADDRESS=${DOCKER_HOST_NAME}
