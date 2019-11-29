@@ -1,6 +1,5 @@
 
-http://localhost http://envirocar.org https://envirocar.org {
-    tls self_signed
+http://next.envirocar.org https://next.envirocar.org {
 
     bind 0.0.0.0
 
