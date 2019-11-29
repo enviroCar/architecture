@@ -57,8 +57,8 @@ services:
     networks:
       - stable
     volumes:
-      - mongo-stable-data:/data/db
-      - mongo-stable-config:/data/configdb
+      - ${MONGO_DATA}/stable/data:/data/db
+      - ${MONGO_DATA}/stable/config:/data/configdb
     healthcheck: *mongo-healthcheck
 
   api-dev:
@@ -90,8 +90,8 @@ services:
     networks:
       - dev
     volumes:
-      - mongo-dev-data:/data/db
-      - mongo-dev-config:/data/configdb
+      - ${MONGO_DATA}/dev/data:/data/db
+      - ${MONGO_DATA}/dev/config:/data/configdb
     healthcheck: *mongo-healthcheck
 
   auth-proxy:
@@ -170,17 +170,7 @@ services:
       - citram
 
 volumes:
-  mongo-stable-data:
-    driver: local
-  mongo-stable-config:
-    driver: local
-  mongo-dev-data:
-    driver: local
-  mongo-dev-config:
-    driver: local
-  caddy-data:
-    driver: local
-  registry-data:
+  letsencrypt:
     driver: local
 
 networks:
