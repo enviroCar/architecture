@@ -31,8 +31,7 @@ x-common:
 services:
   api-stable:
     container_name: api-stable
-    image: ${REGISTRY}/envirocar/api:stable
-    build: https://github.com/enviroCar/enviroCar-server.git#master
+    image: envirocar/api:latest
     volumes: *api-stable-volumes
     networks:
       - stable
@@ -43,8 +42,7 @@ services:
   
   api-anonymous-stable:
     container_name: api-anonymous-stable
-    image: ${REGISTRY}/envirocar/anonymous-api:stable
-    build: https://github.com/enviroCar/enviroCar-server.git#anonymous
+    image: envirocar/api:anonymous
     volumes: *api-stable-volumes
     networks:
       - stable
@@ -65,8 +63,7 @@ services:
 
   api-dev:
     container_name: api-dev
-    image: ${REGISTRY}/envirocar/api:dev
-    build: https://github.com/enviroCar/enviroCar-server.git#dev
+    image: envirocar/api:dev
     volumes: *api-dev-volumes
     networks:
       - dev
@@ -76,9 +73,8 @@ services:
     labels: *component-labels
 
   api-anonymous-dev:
-    container_name: anonymous-api-dev
-    image: ${REGISTRY}/envirocar/anonymous-api:dev
-    build: https://github.com/enviroCar/enviroCar-server.git#anonymous-develop
+    container_name: api-anonymous-dev
+    image: envirocar/api:anonymous-dev
     volumes: *api-dev-volumes
     networks:
       - dev
@@ -100,8 +96,7 @@ services:
 
   auth-proxy:
     container_name: auth-proxy
-    image: ${REGISTRY}/envirocar/auth-proxy:latest
-    build: https://github.com/enviroCar/auth-proxy.git
+    image: envirocar/auth-proxy:latest
     depends_on:
       - api-stable
     networks:
@@ -114,8 +109,7 @@ services:
 
   webapp:
     container_name: webapp
-    image: ${REGISTRY}/envirocar/webapp:latest
-    build: https://github.com/enviroCar/envirocar-www-ng.git
+    image: envirocar/webapp:latest
     depends_on:
       - auth-proxy
     networks:
@@ -129,36 +123,18 @@ services:
 
   landingpage:
     container_name: landing-page
-    image: ${REGISTRY}/envirocar/landingpage:latest
-    build: https://github.com/enviroCar/enviroCar-landing-page.git
+    image: envirocar/landingpage:latest
     networks:
       - stable
     labels: *component-labels
 
   citram-website:
     container_name: citram-website
-    build: https://github.com/enviroCar/citram-website.git
-    image: ${REGISTRY}/envirocar/citram-website:latest
+    image: envirocar/citram-website:latest
     networks:
       - citram
     labels: *component-labels
 
-  registry:
-    container_name: docker-registry
-    image: registry:2
-    restart: always
-    networks:
-      - infra
-    ports:
-      - "5000:5000"
-    volumes: 
-      - registry-data:/var/lib/registry
-    healthcheck:
-      interval: 5s
-      timeout: 20s 
-      retries: 3
-      test: wget http://localhost:5000/v2 -q -O - > /dev/null 2>&1
-  
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower:latest
@@ -175,7 +151,7 @@ services:
 
   proxy:
     container_name: proxy
-    image: ${REGISTRY}/envirocar/proxy:latest
+    image: envirocar/proxy:latest
     build:
       context: https://github.com/abiosoft/caddy-docker.git
       dockerfile: Dockerfile-no-stats
