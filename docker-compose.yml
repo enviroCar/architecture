@@ -166,7 +166,8 @@ services:
       - "443:443"
     volumes:
       - ./caddy/Caddyfile:/etc/Caddyfile
-      - letsencrypt:/root/.caddy/acme/acme-v02.api.letsencrypt.org/
+      - letsencrypt:/root/.caddy/
+      - caddy-root:/srv
     command: --conf /etc/Caddyfile --port 443 --log stdout --agree=true
     networks:
       - dev
@@ -175,6 +176,8 @@ services:
 
 volumes:
   letsencrypt:
+    driver: local
+  caddy-root:
     driver: local
 
 networks:
