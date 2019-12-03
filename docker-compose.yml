@@ -14,6 +14,7 @@ x-common:
     - ./mail/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
     - ./mail/mail.properties:/var/lib/jetty/mail.properties:ro
     - ./dev/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+    - api-previews:/var/data/envirocar/previews
 
   api-stable-volumes: &api-stable-volumes
     - ./mail/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
@@ -21,6 +22,7 @@ x-common:
     - ./mail/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
     - ./mail/mail.properties:/var/lib/jetty/mail.properties:ro
     - ./stable/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+    - api-previews:/var/data/envirocar/previews
 
   api-environment: &api-environment
     JAVA_OPTIONS: "-Djava.awt.headless=true"
@@ -178,6 +180,8 @@ volumes:
   letsencrypt:
     driver: local
   caddy-root:
+    driver: local
+  api-previews:
     driver: local
 
 networks:
