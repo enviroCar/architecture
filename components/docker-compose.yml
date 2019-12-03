@@ -8,7 +8,7 @@ services:
       GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_PASSWORD}
       GEOSERVER_CSRF_WHITELIST: ${DOCKER_HOST_NAME}
     volumes:
-      - geoserver-data:/opt/geoserver/data_dir/
+      - "geoserver-data:/opt/geoserver/data_dir/"
     depends_on:
       - osm-db
     networks:
@@ -18,9 +18,9 @@ services:
     image: ${REGISTRY}/envirocar/postgres:latest
     build: ./postgres
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - ./osm-data:/var/lib/postgresql/data
     networks:
@@ -35,12 +35,12 @@ services:
     networks:
       - shared
     environment:
-      - BAREFOOT_POSTGIS_HOST=osm-db
-      - BAREFOOT_POSTGIS_PORT=5432
-      - BAREFOOT_POSTGIS_DATABASE=${POSTGRES_DB}
-      - BAREFOOT_POSTGIS_USER=${POSTGRES_USER}
-      - BAREFOOT_POSTGIS_PASS=${POSTGRES_PASSWORD}
-      - LOGGING_LEVEL_ROOT=DEBUG
+      BAREFOOT_POSTGIS_HOST: osm-db
+      BAREFOOT_POSTGIS_PORT: 5432
+      BAREFOOT_POSTGIS_DATABASE: ${POSTGRES_DB}
+      BAREFOOT_POSTGIS_USER: ${POSTGRES_USER}
+      BAREFOOT_POSTGIS_PASS: ${POSTGRES_PASSWORD}
+      LOGGING_LEVEL_ROOT: DEBUG
     depends_on:
       - osm-db
     labels:
@@ -53,7 +53,8 @@ services:
     networks:
       - shared
     volumes:
-      - mongo-data-data:/data
+      - "mongo-data-data:/data/db"
+      - "mongo-data-config:/data/configdb"
     labels:
       org.envirocar.backup.mongodb: enviroCar
 
@@ -61,11 +62,11 @@ services:
     image: ${REGISTRY}/envirocar/dsm:latest
     build: https://github.com/enviroCar/enviroCar-server.git#dsm
     volumes:
-      - ./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
-      - ./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
-      - ./dsm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
-      - ./dsm/mail.properties:/var/lib/jetty/mail.properties:ro
-      - ./dsm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+      - "./dsm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro"
+      - "./dsm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro"
+      - "./dsm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro"
+      - "./dsm/mail.properties:/var/lib/jetty/mail.properties:ro"
+      - "./dsm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro"
     networks:
       - shared
     environment:
@@ -82,7 +83,8 @@ services:
     networks:
       - shared
     volumes:
-      - mongo-user-data:/data
+      - "mongo-user-data:/data/db"
+      - "mongo-user-config:/data/configdb"
     labels:
       org.envirocar.backup.mongodb: enviroCar
 
@@ -90,11 +92,11 @@ services:
     image: ${REGISTRY}/envirocar/usm:latest
     build: https://github.com/enviroCar/enviroCar-server.git#usm
     volumes:
-      - ./usm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
-      - ./usm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
-      - ./usm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
-      - ./usm/mail.properties:/var/lib/jetty/mail.properties:ro
-      - ./usm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
+      - "./usm/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro"
+      - "./usm/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro"
+      - "./usm/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro"
+      - "./usm/mail.properties:/var/lib/jetty/mail.properties:ro"
+      - "./usm/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro"
     networks:
       - shared
     environment:
@@ -188,14 +190,18 @@ services:
 volumes:
   mongo-user-data:
     driver: local
+  mongo-user-config:
+    driver: local
   mongo-data-data:
     driver: local
-  base_ftp-data:
-    external: true
+  mongo-data-config:
+    driver: local
   geoserver-data:
     driver: local
     labels:
       org.envirocar.backup: "true"
+  base_ftp-data:
+    external: true
 
 networks:
   shared:
