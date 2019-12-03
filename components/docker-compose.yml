@@ -40,10 +40,11 @@ services:
       - BAREFOOT_POSTGIS_DATABASE=${POSTGRES_DB}
       - BAREFOOT_POSTGIS_USER=${POSTGRES_USER}
       - BAREFOOT_POSTGIS_PASS=${POSTGRES_PASSWORD}
+      - LOGGING_LEVEL_ROOT=DEBUG
     depends_on:
       - osm-db
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+      com.centurylinklabs.watchtower.enable: "true"
 
   ### Data Management Service
   mongo-data:
@@ -53,6 +54,8 @@ services:
       - shared
     volumes:
       - mongo-data-data:/data
+    labels:
+      org.envirocar.backup.mongodb: enviroCar
 
   dsm:
     image: ${REGISTRY}/envirocar/dsm:latest
@@ -70,7 +73,7 @@ services:
     depends_on:
       - mongo-data
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+      com.centurylinklabs.watchtower.enable: "true"
 
   ### User Management Service
   mongo-user:
@@ -80,6 +83,8 @@ services:
       - shared
     volumes:
       - mongo-user-data:/data
+    labels:
+      org.envirocar.backup.mongodb: enviroCar
 
   usm:
     image: ${REGISTRY}/envirocar/usm:latest
@@ -97,7 +102,7 @@ services:
     depends_on:
       - mongo-user
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+      com.centurylinklabs.watchtower.enable: "true"
 
   auth-proxy:
     image: ${REGISTRY}/envirocar/auth-proxy:latest
@@ -112,7 +117,7 @@ services:
       AUTH_PROXY_LOG_LEVEL: INFO
       AUTH_PROXY_TARGET_URI: http://${DOCKER_HOST_NAME}/usm/
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+      com.centurylinklabs.watchtower.enable: "true"
 
   webapp:
     image: ${REGISTRY}/envirocar/webapp:latest
@@ -128,7 +133,7 @@ services:
       EC_WEBSITE_BASE: https://envirocar.org/
       EC_SERVER_BASE: https://envirocar.org/api/stable
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+      com.centurylinklabs.watchtower.enable: "true"
 
   landingpage:
     image: ${REGISTRY}/envirocar/landingpage:latest
@@ -136,7 +141,7 @@ services:
     networks:
       - shared
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+      com.centurylinklabs.watchtower.enable: "true"
 
   mean-speed-service:
     image: ${REGISTRY}/envirocar/mean-speed-service:latest
@@ -147,7 +152,7 @@ services:
       - shared
       - base_shared
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+      com.centurylinklabs.watchtower.enable: "true"
     environment:
       KAFKA_ENDPOINT: base_kafka_1:9092
       POSTGRES_HOST: osm-db
@@ -163,7 +168,7 @@ services:
       - shared
       - base_shared
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+      com.centurylinklabs.watchtower.enable: "true"
     volumes:
       - base_ftp-data:/outputs
     environment:
@@ -189,6 +194,8 @@ volumes:
     external: true
   geoserver-data:
     driver: local
+    labels:
+      org.envirocar.backup: "true"
 
 networks:
   shared:

@@ -86,10 +86,16 @@ services:
 volumes:
   elastic-data:
     driver: local
+    labels:
+      org.envirocar.backup: "true"
   kafka-data:
     driver: local
+    labels:
+      org.envirocar.backup: "true"
   ftp-data:
     driver: local
+    labels:
+      org.envirocar.backup: "true"
   proxy_certificates:
     external: true
 

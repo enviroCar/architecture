@@ -69,6 +69,8 @@ volumes:
     driver: local
   registry-data:
     driver: local
+    labels:
+      org.envirocar.backup: "true"
 
 networks:
   shared:
