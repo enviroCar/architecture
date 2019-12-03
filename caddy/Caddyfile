@@ -1,5 +1,5 @@
 
-http://next.envirocar.org https://next.envirocar.org {
+www.envirocar.org envirocar.org {
 
     bind 0.0.0.0
 
@@ -53,9 +53,7 @@ http://next.envirocar.org https://next.envirocar.org {
     
 }
 
-http://citram.de https://citram.de {
-
-    tls self_signed
+www.citram.de citram.de {
         
     bind 0.0.0.0
 
