@@ -47,6 +47,8 @@ services:
       - 5000:5000
     networks:
       - shared
+    environment:
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
     volumes: 
       - registry-data:/var/lib/registry
 
