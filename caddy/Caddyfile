@@ -15,7 +15,11 @@ www.envirocar.org envirocar.org {
 
     log / stdout "{combined}"
 
-    proxy /auth-proxy auth-proxy:9999 {
+    proxy /auth-proxy-dev auth-proxy-dev:9999 {
+        transparent
+    }
+
+    proxy /auth-proxy auth-proxy-stable:9999 {
         transparent
     }
 

@@ -100,8 +100,8 @@ services:
     labels:
       - org.envirocar.backup.mongodb=enviroCar
 
-  auth-proxy:
-    container_name: auth-proxy
+  auth-proxy-stable:
+    container_name: auth-proxy-stable
     image: envirocar/auth-proxy:latest
     depends_on:
       - api-stable
@@ -113,11 +113,24 @@ services:
       AUTH_PROXY_TARGET_URI: https://${DOCKER_HOST_NAME}/api/stable/
     labels: *component-labels
 
+  auth-proxy-dev:
+    container_name: auth-proxy-dev
+    image: envirocar/auth-proxy:latest
+    depends_on:
+      - api-dev
+    networks:
+      - dev
+    environment:
+      AUTH_PROXY_CONTEXT_PATH: /auth-proxy-dev
+      AUTH_PROXY_LOG_LEVEL: INFO
+      AUTH_PROXY_TARGET_URI: https://${DOCKER_HOST_NAME}/api/dev/
+    labels: *component-labels
+
   webapp:
     container_name: webapp
     image: envirocar/webapp:latest
     depends_on:
-      - auth-proxy
+      - auth-proxy-stable
     networks:
       - stable
     environment:
