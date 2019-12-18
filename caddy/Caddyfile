@@ -9,7 +9,7 @@ www.envirocar.org envirocar.org {
         X-Content-Type-Options "nosniff"
         X-Frame-Options "DENY"
         Referrer-Policy "strict-origin-when-cross-origin"
-        Content-Security-Policy "default-src https:"
+        #Content-Security-Policy "default-src https: 'unsafe-inline'; img-src * data:"
         -Server
     }
 
@@ -79,7 +79,7 @@ www.citram.de citram.de {
         X-Content-Type-Options "nosniff"
         X-Frame-Options "DENY"
         Referrer-Policy "strict-origin-when-cross-origin"
-        Content-Security-Policy "default-src https:"
+        #Content-Security-Policy "default-src https: 'unsafe-inline'; img-src * data:"
         -Server
     }
     
