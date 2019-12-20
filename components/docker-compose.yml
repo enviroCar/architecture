@@ -25,6 +25,8 @@ services:
       - ./osm-data:/var/lib/postgresql/data
     networks:
       - shared
+    labels:
+      org.envirocar.backup.postgres: segment_metadata,track_ids,track_ids_not_matched
 
   ### MapMatching Service
   mapmatching:
