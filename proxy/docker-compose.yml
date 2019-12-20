@@ -14,6 +14,8 @@ services:
     volumes:
       - ./caddy/Caddyfile:/etc/Caddyfile
       - certificates:/root/.caddy/acme/acme-v02.api.letsencrypt.org/sites/${DOCKER_HOST_NAME}/
+      - caddy-root:/srv
+      - caddy-data:/root/.caddy
     command: --conf /etc/Caddyfile --port 443 --log stdout--agree=true
     networks:
       - shared
@@ -23,6 +25,10 @@ services:
 
 volumes:
   certificates:
+    driver: local
+  caddy-data:
+    driver: local
+  caddy-root:
     driver: local
 
 networks:

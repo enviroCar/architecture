@@ -5,6 +5,10 @@ services:
   zookeeper:
     image: ${REGISTRY}/envirocar/zookeeper:latest
     build: ./zookeeper
+    volumes:
+      - zookeeper-secrets:/etc/zookeeper/secrets
+      - zookeeper-logs:/var/lib/zookeeper/log
+      - zookeeper-data:/var/lib/zookeeper/data
     networks:
       - shared
 
@@ -20,6 +24,7 @@ services:
       - 9092:9092
     volumes:
       - kafka-data:/var/lib/kafka/data
+      - kafka-secrets:/etc/kafka/secrets
     networks:
       - shared
 
@@ -68,11 +73,11 @@ services:
       - "21:21"
       - "21100-21110:21100-21110"
     volumes:
-      - proxy_certificates:/etc/ssl/certs:ro
+      - proxy_certificates:/etc/vsftpd/ssl:ro
       - ftp-data:/srv/ftp
     environment:
-      - CERT_FILE=/etc/ssl/certs/${DOCKER_HOST_NAME}.crt
-      - CERT_KEY_FILE=/etc/ssl/certs/${DOCKER_HOST_NAME}.key
+      - CERT_FILE=/etc/vsftpd/ssl/${DOCKER_HOST_NAME}.crt
+      - CERT_KEY_FILE=/etc/vsftpd/ssl/${DOCKER_HOST_NAME}.key
       - PASV_MIN_PORT=21100
       - PASV_MAX_PORT=21110
       - PASV_ADDRESS=${DOCKER_HOST_NAME}
@@ -96,6 +101,14 @@ volumes:
     driver: local
     labels:
       org.envirocar.backup: "true"
+  kafka-secrets:
+    driver: local
+  zookeeper-data:
+    driver: local
+  zookeeper-logs:
+    driver: local
+  zookeeper-secrets:
+    driver: local
   proxy_certificates:
     external: true
 

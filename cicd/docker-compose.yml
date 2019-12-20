@@ -9,6 +9,7 @@ services:
     command: --insecure-registry registry:5000 --bip 10.17.0.1/16
     volumes:
       - docker-certs:/certs
+      - docker-data:/var/lib/docker
     networks:
       - shared
 
@@ -16,8 +17,8 @@ services:
     image: ${REGISTRY}/envirocar/jenkins:latest
     build: ./jenkins
     volumes:
-      - ./jenkins/jobs:/usr/share/jenkins/jobs
       - docker-certs:/certs:ro
+      - jenkins-data:/var/jenkins_home
     environment:
       JENKINS_USERNAME: ${JENKINS_PASSWORD}
       JENKINS_PASSWORD: ${JENKINS_PASSWORD}
@@ -68,6 +69,10 @@ services:
 
 volumes:
   docker-certs:
+    driver: local
+  docker-data:
+    driver: local
+  jenkins-data:
     driver: local
   registry-data:
     driver: local
