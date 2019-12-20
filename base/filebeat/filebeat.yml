@@ -1,8 +1,9 @@
-filebeat.inputs:
-- type: docker
-  paths:
-   - '/var/lib/docker/containers/*/*.log'
-  containers.ids: '*'
+filebeat:
+  inputs:
+    - type: docker
+      paths:
+      - '/var/lib/docker/containers/*/*.log'
+      containers.ids: '*'
 
 processors:
   - decode_json_fields:
@@ -11,13 +12,22 @@ processors:
       overwrite_keys: true
   - add_docker_metadata: ~
 
-output.elasticsearch:
-  hosts: ["elastic:9200"]
+output:
+  elasticsearch:
+    hosts: ["elastic:9200"]
 
-setup.kibana:
-  host: "https://processing.envirocar.org/kibana"
+setup:
+  ilm:
+    enabled: true
+    check_exists: true
+    overwrite: true
+  kibana:
+    host: kibana:5601
+  dashboards:
+    enabled: true
 
-logging.level: info
-logging.to_stderr: true
-logging.to_files: false
-logging.to_syslog: false
+logging:
+  level: info
+  to_stderr: true
+  to_files: false
+  to_syslog: false
