@@ -1,0 +1,12 @@
+[Unit]
+Description=docker in docker image clean timer
+
+[Timer]
+OnBootSec=1h
+OnUnitInactiveSec=1d
+Persistent=true
+
+[Install]
+WantedBy=docker.service
+
+

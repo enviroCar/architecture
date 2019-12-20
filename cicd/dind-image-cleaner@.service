@@ -1,0 +1,14 @@
+[Unit]
+Description=docker in docker image cleaner
+
+[Service]
+Type=oneshot
+Nice=19
+IOSchedulingClass=2
+IOSchedulingPriority=7
+Environment=CONTAINER=%I
+ExecStart=/bin/sh -c "\
+    test \"$(docker inspect --type container -f \"{{.State.Status}}\" ${CONTAINER})\" = \"running\" || exit 0 \
+    && docker exec ${CONTAINER} docker image prune -f --filter \"until=24h\" \
+    " 
+
