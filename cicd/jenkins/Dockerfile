@@ -4,10 +4,14 @@ USER root
 RUN apk --no-cache add docker gettext
 
 USER jenkins
-
 COPY files/ /usr/share/jenkins/ref/
 
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+
+USER root
+RUN mkdir -p /usr/share/jenkins/jobs \
+ && chown jenkins:jenkins /usr/share/jenkins/jobs
+USER jenkins
 
 ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false" \
     JOB_CONFIGS="" \
