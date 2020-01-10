@@ -41,6 +41,7 @@ services:
     depends_on:
       - mongo-stable
     labels: *component-labels
+    restart: unless-stopped
   
   api-anonymous-stable:
     container_name: api-anonymous-stable
@@ -52,6 +53,7 @@ services:
     depends_on:
       - mongo-stable
     labels: *component-labels
+    restart: unless-stopped
 
   mongo-stable:
     container_name: mongo-stable
@@ -64,6 +66,7 @@ services:
     healthcheck: *mongo-healthcheck
     labels:
       - org.envirocar.backup.mongodb=enviroCar
+    restart: unless-stopped
 
   api-dev:
     container_name: api-dev
@@ -75,6 +78,7 @@ services:
     depends_on:
       - mongo-dev
     labels: *component-labels
+    restart: unless-stopped
 
   api-anonymous-dev:
     container_name: api-anonymous-dev
@@ -87,6 +91,7 @@ services:
       - mongo-dev
     labels:
       - com.centurylinklabs.watchtower.enable=true
+    restart: unless-stopped
 
   mongo-dev:
     container_name: mongo-dev
@@ -99,6 +104,7 @@ services:
     healthcheck: *mongo-healthcheck
     labels:
       - org.envirocar.backup.mongodb=enviroCar
+    restart: unless-stopped
 
   auth-proxy-stable:
     container_name: auth-proxy-stable
@@ -112,6 +118,7 @@ services:
       AUTH_PROXY_LOG_LEVEL: INFO
       AUTH_PROXY_TARGET_URI: https://${DOCKER_HOST_NAME}/api/stable/
     labels: *component-labels
+    restart: unless-stopped
 
   auth-proxy-dev:
     container_name: auth-proxy-dev
@@ -125,6 +132,7 @@ services:
       AUTH_PROXY_LOG_LEVEL: INFO
       AUTH_PROXY_TARGET_URI: https://${DOCKER_HOST_NAME}/api/dev/
     labels: *component-labels
+    restart: unless-stopped
 
   webapp:
     container_name: webapp
@@ -139,6 +147,7 @@ services:
       EC_WEBSITE_BASE: https://${DOCKER_HOST_NAME}/
       EC_SERVER_BASE: https://${DOCKER_HOST_NAME}/api/stable
     labels: *component-labels
+    restart: unless-stopped
 
   landingpage:
     container_name: landing-page
@@ -146,6 +155,7 @@ services:
     networks:
       - stable
     labels: *component-labels
+    restart: unless-stopped
 
   citram-website:
     container_name: citram-website
@@ -153,6 +163,7 @@ services:
     networks:
       - citram
     labels: *component-labels
+    restart: unless-stopped
 
   watchtower:
     container_name: watchtower
@@ -167,6 +178,7 @@ services:
     networks:
       - infra
     command: --interval 30 --label-enable
+    restart: unless-stopped
 
   proxy:
     container_name: proxy
@@ -188,6 +200,7 @@ services:
       - dev
       - stable
       - citram
+    restart: unless-stopped
 
 volumes:
   letsencrypt:
