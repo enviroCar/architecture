@@ -12,6 +12,7 @@ services:
       - docker-data:/var/lib/docker
     networks:
       - shared
+    restart: unless-stopped
 
   jenkins:
     image: ${REGISTRY}/envirocar/jenkins:latest
@@ -39,6 +40,7 @@ services:
       - docker
     networks:
       - shared
+    restart: unless-stopped
 
   registry:
     image: ${REGISTRY}/envirocar/registry:latest
@@ -52,6 +54,7 @@ services:
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
     volumes: 
       - registry-data:/var/lib/registry
+    restart: unless-stopped
 
   watchtower:
     image: ${REGISTRY}/envirocar/watchtower:latest
@@ -65,6 +68,7 @@ services:
       WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: watchtower
     networks:
       - shared
+    restart: unless-stopped
 
 
 volumes:

@@ -22,6 +22,7 @@ services:
       - base_shared
       - cicd_shared
       - components_shared
+    restart: unless-stopped
 
 volumes:
   certificates:

@@ -11,6 +11,7 @@ services:
       - zookeeper-data:/var/lib/zookeeper/data
     networks:
       - shared
+    restart: unless-stopped
 
   kafka:
     image: ${REGISTRY}/envirocar/kafka:latest
@@ -27,6 +28,7 @@ services:
       - kafka-secrets:/etc/kafka/secrets
     networks:
       - shared
+    restart: unless-stopped
 
   ### ELK Stack
   elastic:
@@ -42,6 +44,7 @@ services:
       memlock:
         soft: -1
         hard: -1
+    restart: unless-stopped
 
   kibana:
     image: ${REGISTRY}/envirocar/kibana:latest
@@ -64,6 +67,7 @@ services:
       - elastic
     networks:
       - shared
+    restart: unless-stopped
 
   ftp:
     image: ${REGISTRY}/envirocar/ftp:latest
@@ -87,6 +91,7 @@ services:
       - ALLOW_ANON=YES
     networks:
       - shared
+    restart: unless-stopped
 
 volumes:
   elastic-data:
