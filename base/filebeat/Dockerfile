@@ -1,6 +1,7 @@
 
 FROM docker.elastic.co/beats/filebeat:7.0.0
 COPY filebeat.yml /usr/share/filebeat/filebeat.yml
+COPY ilm.json     /usr/share/filebeat/ilm.json 
 
 # must run as root to access /var/lib/docker and /var/run/docker.sock
 USER root

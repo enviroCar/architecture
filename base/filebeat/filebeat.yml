@@ -21,6 +21,8 @@ setup:
     enabled: true
     check_exists: true
     overwrite: true
+    policy_file: "/usr/share/filebeat/ilm.json"
+
   kibana:
     host: kibana:5601
   dashboards:
