@@ -36,6 +36,7 @@ services:
         usm,enviroCar USM API,enviroCar/enviroCar-server,usm
         webapp,enviroCar Webapp,enviroCar/envirocar-www-ng
         mss,enviroCar Mean Speed Service,enviroCar/mean-speed-service
+        vehicles,enviroCar Vehicle Service,enviroCar/vehicles
     depends_on:
       - docker
     networks:
