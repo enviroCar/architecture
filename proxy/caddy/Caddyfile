@@ -65,3 +65,9 @@ proxy /mapmatching mapmatching:8080 {
     transparent
 }
 
+proxy /vehicles vehicles:8080 {
+    transparent
+    without /vehicles
+    header_upstream X-Forwarded-Prefix /vehicles
+}
+

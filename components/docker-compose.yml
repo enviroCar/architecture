@@ -199,7 +199,37 @@ services:
       QAD_MAPMATCHING_ENABLE: "true"
       QAD_MAPMATCHING_ENDPOINT: https://${DOCKER_HOST_NAME}
       QAD_OUTPUT_PATH: /outputs
+
+  vehicles-db:
+    image: ${REGISTRY}/envirocar/vehicles-db:latest
+    networks:
+      - shared
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - vehicles-data:/var/lib/postgresql/data
     restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+  vehicles:
+    image: ${REGISTRY}/envirocar/vehicles:latest
+    networks:
+      - shared
+    environment:
+      PORT: 8080
+      DB_USER: ${POSTGRES_USER}
+      DB_PASS: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+      DB_ADDR: vehicles-db:5432
+    depends_on:
+      - vehicles-db
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
 
 volumes:
   mongo-user-data:
@@ -209,6 +239,8 @@ volumes:
   mongo-data-data:
     driver: local
   mongo-data-config:
+    driver: local
+  vehicles-data:
     driver: local
   geoserver-data:
     driver: local
