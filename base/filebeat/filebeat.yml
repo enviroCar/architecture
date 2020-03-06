@@ -21,6 +21,7 @@ setup:
     enabled: true
     check_exists: true
     overwrite: true
+    rollover_alias: filebeat
     policy_file: "/usr/share/filebeat/ilm.json"
 
   kibana:
