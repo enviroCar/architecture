@@ -9,17 +9,17 @@ x-common:
     test: "mongo localhost --eval 'quit(db.runCommand({ping:1}).ok ? 0 : 1)'"
   
   api-dev-volumes: &api-dev-volumes
-    - ./mail/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
-    - ./mail/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
-    - ./mail/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+    - ./mail/mail-verification-mail-template.html:/home/jetty/mail-verification-mail-template.html:ro
+    - ./mail/mail-verification-mail-template.txt:/home/jetty/mail-verification-mail-template.txt:ro
+    - ./mail/password-recovery-mail-template.txt:/home/jetty/password-recovery-mail-template.txt:ro
     - ./mail/mail.properties:/var/lib/jetty/mail.properties:ro
     - ./dev/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
     - api-previews:/var/data/envirocar/previews
 
   api-stable-volumes: &api-stable-volumes
-    - ./mail/mail-verification-mail-template.html:/var/lib/jetty/mail-verification-mail-template.html:ro
-    - ./mail/mail-verification-mail-template.txt:/var/lib/jetty/mail-verification-mail-template.txt:ro
-    - ./mail/password-recovery-mail-template.txt:/var/lib/jetty/password-recovery-mail-template.txt:ro
+    - ./mail/mail-verification-mail-template.html:/home/jetty/mail-verification-mail-template.html:ro
+    - ./mail/mail-verification-mail-template.txt:/home/jetty/mail-verification-mail-template.txt:ro
+    - ./mail/password-recovery-mail-template.txt:/home/jetty/password-recovery-mail-template.txt:ro
     - ./mail/mail.properties:/var/lib/jetty/mail.properties:ro
     - ./stable/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
     - api-previews:/var/data/envirocar/previews
