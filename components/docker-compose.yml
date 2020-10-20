@@ -7,6 +7,7 @@ services:
     environment:
       GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_PASSWORD}
       GEOSERVER_CSRF_WHITELIST: ${DOCKER_HOST_NAME}
+      XFRAME_OPTIONS: FALSE
     volumes:
       - "geoserver-data:/opt/geoserver/data_dir/"
     depends_on:
