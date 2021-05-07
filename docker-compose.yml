@@ -182,20 +182,14 @@ services:
 
   proxy:
     container_name: proxy
-    image: envirocar/proxy:latest
-    build:
-      context: https://github.com/abiosoft/caddy-docker.git
-      dockerfile: Dockerfile-no-stats
-      args:
-        plugins: cors,ipfilter,realip,expires,cache
+    image: caddy:alpine
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./caddy/Caddyfile:/etc/Caddyfile
-      - letsencrypt:/root/.caddy/
-      - caddy-root:/srv
-    command: --conf /etc/Caddyfile --port 443 --log stdout --agree=true
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
     networks:
       - dev
       - stable
@@ -203,9 +197,9 @@ services:
     restart: unless-stopped
 
 volumes:
-  letsencrypt:
+  caddy-data:
     driver: local
-  caddy-root:
+  caddy-config:
     driver: local
   api-previews:
     driver: local
