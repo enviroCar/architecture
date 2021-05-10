@@ -14,12 +14,22 @@ http://citram.de {
 	redir https://citram.de{uri} permanent
 }
 
-www.envirocar.org {
+http://www.envirocar.org {
 	bind 0.0.0.0
 	redir https://envirocar.org{uri} permanent
 }
 
-www.citram.de {
+http://www.citram.de {
+	bind 0.0.0.0
+	redir https://citram.de{uri} permanent
+}
+
+https://www.envirocar.org {
+	bind 0.0.0.0
+	redir https://envirocar.org{uri} permanent
+}
+
+https://www.citram.de {
 	bind 0.0.0.0
 	redir https://citram.de{uri} permanent
 }
