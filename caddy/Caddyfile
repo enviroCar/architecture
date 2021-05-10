@@ -1,92 +1,115 @@
-
-www.envirocar.org envirocar.org {
-
-    bind 0.0.0.0
-
-    header {
-        Strict-Transport-Security "max-age=31536000;"
-        X-XSS-Protection "1; mode=block"
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        Referrer-Policy "strict-origin-when-cross-origin"
-        #Content-Security-Policy "default-src https: 'unsafe-inline'; img-src * data:"
-        -Server
-    }
-
-    log {
-        format console
-    }
-    redir /auth-proxy-dev /auth-proxy-dev/ 302
-    reverse_proxy /auth-proxy-dev/* auth-proxy-dev:9999 
-    
-    redir /auth-proxy /auth-proxy/ 302
-    reverse_proxy /auth-proxy/* auth-proxy-stable:9999 
-
-    redir /api/dev /api/dev/ 302
-    handle  /api/dev/* {
-        uri strip_prefix /api/dev
-        reverse_proxy api-dev:8080 {
-            header_up X-Forwarded-Prefix /api/dev
-        }
-    }
-    
-    redir /api/stable /api/stable/ 302
-    handle  /api/stable/* {
-        uri strip_prefix /api/stable
-        reverse_proxy api-stable:8080 {
-            header_up X-Forwarded-Prefix /api/stable
-        }
-    }
-    
-    redir /api/anonymous /api/anonymous/ 302
-    handle /api/anonymous/* {
-        uri strip_prefix /api/anonymous
-        reverse_proxy api-anonymous-stable:8080 {
-            header_up X-Forwarded-Prefix /api/anonymous
-        }
-    }
-    
-    redir /api/anonymous-dev /api/anonymous-dev/ 302
-    handle /api/anonymous-dev/* {
-        uri strip_prefix /api/anonymous-dev
-        reverse_proxy api-anonymous-dev:8080 {
-            header_up X-Forwarded-Prefix /api/anonymous-dev
-        }
-    }
-
-    redir /app /app/ 302
-    handle /app/* {
-        uri strip_prefix /app
-        reverse_proxy webapp:80
-    }
-
-    redir /citram /citram/ 302    
-    handle /citram/* {
-        uri strip_prefix /citram
-        reverse_proxy citram-website:80
-    }
-    
-    reverse_proxy /* landingpage:80
-    
+{
+	auto_https disable_redirects
+	email envirocar@52north.org
+	default_sni envirocar.org
 }
 
-www.citram.de citram.de {
-        
-    bind 0.0.0.0
+http://envirocar.org {
+	bind 0.0.0.0
+	redir https://envirocar.org{uri} permanent
+}
 
-    log {
-        format console
-    }
+http://citram.de {
+	bind 0.0.0.0
+	redir https://citram.de{uri} permanent
+}
 
-    header {
-        Strict-Transport-Security "max-age=31536000;"
-        X-XSS-Protection "1; mode=block"
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        Referrer-Policy "strict-origin-when-cross-origin"
-        #Content-Security-Policy "default-src https: 'unsafe-inline'; img-src * data:"
-        -Server
-    }
-    
-    reverse_proxy /* citram-website:80
+www.envirocar.org {
+	bind 0.0.0.0
+	redir https://envirocar.org{uri} permanent
+}
+
+www.citram.de {
+	bind 0.0.0.0
+	redir https://citram.de{uri} permanent
+}
+
+https://envirocar.org {
+	bind 0.0.0.0
+
+	header {
+		Strict-Transport-Security "max-age=31536000;"
+		X-XSS-Protection "1; mode=block"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		#Content-Security-Policy "default-src https: 'unsafe-inline'; img-src * data:"
+		-Server
+	}
+
+	log {
+		format console
+	}
+
+	rewrite /auth-proxy-dev /auth-proxy-dev/
+	reverse_proxy /auth-proxy-dev/* auth-proxy-dev:9999
+
+	rewrite /auth-proxy /auth-proxy/
+	reverse_proxy /auth-proxy/* auth-proxy-stable:9999
+
+	rewrite /api/dev /api/dev/
+	handle /api/dev/* {
+		uri strip_prefix /api/dev
+		reverse_proxy api-dev:8080 {
+			header_up X-Forwarded-Prefix /api/dev
+		}
+	}
+
+	rewrite /api/stable /api/stable/
+	handle /api/stable/* {
+		uri strip_prefix /api/stable
+		reverse_proxy api-stable:8080 {
+			header_up X-Forwarded-Prefix /api/stable
+		}
+	}
+
+	rewrite /api/anonymous /api/anonymous/
+	handle /api/anonymous/* {
+		uri strip_prefix /api/anonymous
+		reverse_proxy api-anonymous-stable:8080 {
+			header_up X-Forwarded-Prefix /api/anonymous
+		}
+	}
+
+	rewrite /api/anonymous-dev /api/anonymous-dev/
+	handle /api/anonymous-dev/* {
+		uri strip_prefix /api/anonymous-dev
+		reverse_proxy api-anonymous-dev:8080 {
+			header_up X-Forwarded-Prefix /api/anonymous-dev
+		}
+	}
+
+	rewrite /app /app/
+	handle /app/* {
+		uri strip_prefix /app
+		reverse_proxy webapp:80
+	}
+
+	rewrite /citram /citram/
+	handle /citram/* {
+		uri strip_prefix /citram
+		reverse_proxy citram-website:80
+	}
+
+	reverse_proxy /* landingpage:80
+}
+
+https://citram.de {
+	bind 0.0.0.0
+
+	log {
+		format console
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000;"
+		X-XSS-Protection "1; mode=block"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		#Content-Security-Policy "default-src https: 'unsafe-inline'; img-src * data:"
+		-Server
+	}
+
+	reverse_proxy /* citram-website:80
 }
