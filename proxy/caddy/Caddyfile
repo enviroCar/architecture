@@ -15,6 +15,7 @@ proxy /kibana kibana:5601 {
 
 ipfilter /kibana {
     rule allow
+    # 52N Office, envirocar.org, Docker
     ip 80.156.182.234 116.202.82.136 172.16.0.0/12
 }
 
@@ -28,6 +29,7 @@ proxy /jenkins jenkins:8080 {
 
 ipfilter /jenkins {
     rule allow
+    # 52N Office, envirocar.org, Docker
     ip 80.156.182.234 116.202.82.136 172.16.0.0/12
 }
 
