@@ -1,0 +1,13 @@
+
+# JVM heap size 
+# https://www.elastic.co/guide/en/elasticsearch/reference/7.16/heap-size.html
+
+# Xms represents the initial size of total heap space
+-Xms1g
+# Xmx represents the maximum size of total heap space
+-Xmx1g
+
+# https://discuss.elastic.co/t/apache-log4j2-remote-code-execution-rce-vulnerability-cve-2021-44228-esa-2021-31/291476
+-Dlog4j2.formatMsgNoLookups=true
+
+

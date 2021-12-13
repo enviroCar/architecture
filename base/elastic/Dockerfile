@@ -1,6 +1,6 @@
 FROM docker.elastic.co/elasticsearch/elasticsearch:7.16.1
 
-COPY jvm.options config/jvm.options
+COPY heapsize.options log4j2.options config/jvm.options.d/
 
 
 HEALTHCHECK --interval=10s --timeout=5s --retries=5 CMD \
