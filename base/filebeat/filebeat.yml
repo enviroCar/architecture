@@ -17,6 +17,9 @@ output:
     hosts: ["elastic:9200"]
 
 setup:
+  template:
+    enabled: true
+    overwrite: true
   ilm:
     enabled: true
     check_exists: true

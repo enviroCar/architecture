@@ -1,5 +1,5 @@
 
-FROM docker.elastic.co/beats/filebeat:7.0.0
+FROM docker.elastic.co/beats/filebeat:7.16.1
 COPY filebeat.yml /usr/share/filebeat/filebeat.yml
 COPY ilm.json     /usr/share/filebeat/ilm.json 
 
