@@ -24,8 +24,12 @@ x-common:
     - ./stable/mongo.properties:/var/lib/jetty/webapps/ROOT/WEB-INF/classes/mongo.properties:ro
     - api-previews:/var/data/envirocar/previews
 
-  api-environment: &api-environment
+  stable-api-environment: &stable-api-environment
     JAVA_OPTIONS: "-Djava.awt.headless=true"
+  dev-api-environment: &dev-api-environment
+    JAVA_OPTIONS: "-Djava.awt.headless=true"
+    kafka.topic.measurement: dev-measurements
+    kafka.topic.track: dev-tracks
 
   component-labels: &component-labels
     com.centurylinklabs.watchtower.enable: "true"
@@ -37,7 +41,7 @@ services:
     volumes: *api-stable-volumes
     networks:
       - stable
-    environment: *api-environment
+    environment: *stable-api-environment
     depends_on:
       - mongo-stable
     labels: *component-labels
@@ -49,7 +53,7 @@ services:
     volumes: *api-stable-volumes
     networks:
       - stable
-    environment: *api-environment
+    environment: *stable-api-environment
     depends_on:
       - mongo-stable
     labels: *component-labels
@@ -74,7 +78,7 @@ services:
     volumes: *api-dev-volumes
     networks:
       - dev
-    environment: *api-environment
+    environment: *dev-api-environment
     depends_on:
       - mongo-dev
     labels: *component-labels
@@ -86,7 +90,7 @@ services:
     volumes: *api-dev-volumes
     networks:
       - dev
-    environment: *api-environment
+    environment: *dev-api-environment
     depends_on:
       - mongo-dev
     labels:
@@ -168,7 +172,6 @@ services:
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower:latest
-    restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
