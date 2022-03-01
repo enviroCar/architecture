@@ -237,7 +237,7 @@ services:
       com.centurylinklabs.watchtower.enable: "true"
 
   kafka-dummy-publisher:
-    image: ${REGISTRY}/matthesrieke/kafka-dummy-publisher:latest
+    image: matthesrieke/kafka-dummy-publisher:latest
     networks:
       - shared
       - base_shared
