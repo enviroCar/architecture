@@ -236,6 +236,19 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: "true"
 
+  kafka-dummy-publisher:
+    image: ${REGISTRY}/matthesrieke/kafka-dummy-publisher:latest
+    networks:
+      - shared
+      - base_shared
+    environment:
+      - KAFKA_ENDPOINT=base_kafka_1:9092
+      - KAFKA_TOPIC=stuttgart
+      - BBOX_AS_STRING=9.1237883,48.7541855,9.2815773,48.8517465
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
 volumes:
   mongo-user-data:
     driver: local
