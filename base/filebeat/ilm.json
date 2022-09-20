@@ -10,6 +10,7 @@
                 }
             },
             "warm": {
+                "min_age": "1d",
                 "actions": {
                     "forcemerge": {
                         "max_num_segments": 1
@@ -22,13 +23,17 @@
             "cold": {
                 "min_age": "7d",
                 "actions": {
-                    "freeze": {}
+                    "freeze": {},
+                    "readonly": {}
+
                 }
             },
             "delete": {
                 "min_age": "8d",
                 "actions": {
-                    "delete": {}
+                    "delete": {
+                        "delete_searchable_snapshot": true
+                    }
                 }
             }
         }
