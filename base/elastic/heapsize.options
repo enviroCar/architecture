@@ -5,5 +5,5 @@
 # Xms represents the initial size of total heap space
 -Xms1g
 # Xmx represents the maximum size of total heap space
--Xmx1g
+-Xmx4g
 
