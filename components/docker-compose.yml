@@ -9,7 +9,7 @@ services:
       GEOSERVER_CSRF_WHITELIST: ${DOCKER_HOST_NAME}
       XFRAME_OPTIONS: "FALSE"
     volumes:
-      - "geoserver-data:/opt/geoserver/data_dir/"
+      - "geoserver-data:/opt/geoserver/data_dir"
     depends_on:
       - osm-db
     networks:
@@ -232,19 +232,6 @@ services:
       DB_ADDR: vehicles-db:5432
     depends_on:
       - vehicles-db
-    restart: unless-stopped
-    labels:
-      com.centurylinklabs.watchtower.enable: "true"
-
-  kafka-dummy-publisher:
-    image: matthesrieke/kafka-dummy-publisher:latest
-    networks:
-      - shared
-      - base_shared
-    environment:
-      - KAFKA_ENDPOINT=base_kafka_1:9092
-      - KAFKA_TOPIC=stuttgart
-      - BBOX_AS_STRING=9.1237883,48.7541855,9.2815773,48.8517465
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: "true"
