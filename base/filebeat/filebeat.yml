@@ -20,8 +20,10 @@ setup:
   template:
     enabled: true
     overwrite: true
-    index:
-      number_of_replicas: 0
+    settings:
+      index:
+        number_of_shards: 1
+        number_of_replicas: 0
   ilm:
     enabled: true
     check_exists: true
